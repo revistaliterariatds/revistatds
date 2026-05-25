@@ -398,8 +398,8 @@ function construirHtmlNota(esPreview = false) {
   const cuerpoHtml = procesarTextoAHtml(cuerpoRaw);
 
   // Si es Preview, forzamos a que busque las imágenes subiendo un nivel relativo a /edicion/
-  // Si es producción, asume que la nota final vivirá en la raíz y busca en './imagenes/'
-  const rutaImagenes = esPreview ? "../imagenes/" : "./imagenes/";
+  // Si es producción, asume que la nota final vivirá en la raíz y busca en '../imagenes/'
+  const rutaImagenes = esPreview ? "../imagenes/" : "../imagenes/";
 
   let bloqueImagen = "";
   if (imagen.trim() !== "") {
@@ -493,7 +493,7 @@ function construirJsonNota() {
     "categoria":   document.getElementById('categoria').value,
     "autor":       document.getElementById('autor').value || "Tramas del Sur",
     "fecha":       document.getElementById('fecha').value,
-    "imagen":      imagen ? "./imagenes/" + imagen : ""
+    "imagen":      imagen ? "../imagenes/" + imagen : ""
   };
 
   return JSON.stringify(objetoJson, null, 2);
