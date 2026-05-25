@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de Notas — Tramas del Sur</title>
+  <style>
+    /* Estilos globales y fondo subiendo un nivel hacia la raíz */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f0ece3;
+      background-image: url('../imagenes/fondo.jpeg');
+      background-size: cover;
+      background-attachment: fixed;
+      color: #1e1a17;
+      line-height: 1.5;
+      padding: 40px 20px;
+      margin: 0;
+      position: relative;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    /* Capa de opacidad para garantizar legibilidad en el panel */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(240, 236, 227, 0.85);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Asegurar que los contenedores queden por encima del fondo */
+    #loginBox, #mainContainer {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Pantalla de Login */
+    #loginBox {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      text-align: center;
+      max-width: 360px;
+      width: 100%;
+      margin: 100px auto 0 auto;
+      border: 1px solid #cec8bc;
+    }
+    #loginBox h2 { color: #1e1a17; margin-top: 0; font-size: 20px; border-bottom: 2px solid #d95f1a; padding-bottom: 8px; }
+    #loginBox input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 15px 0;
+      border: 1px solid #cec8bc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+    #loginBox input[type="password"]:focus { outline: none; border-color: #d95f1a; }
+    #loginBox button {
+      background: #d95f1a;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 15px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+    #loginBox button:hover { background: #b84d12; }
+    
+    #error-msg { 
+      color: #c0392b; 
+      font-size: 14px; 
+      margin-top: 15px; 
+      font-weight: bold;
+      background: #fce4e4;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #f9baba;
+      display: none; 
+    }
+
+    /* Encabezado del Panel con el Logo */
+    .editor-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .editor-logo {
+      height: 65px;
+      width: auto;
+      display: block;
+      margin: 0 auto 15px auto;
+    }
+
+    /* Contenedor del Generador */
+    #mainContainer {
+      display: none;
+      max-width: 800px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+      border: 1px solid #cec8bc;
+    }
+    #mainContainer h1 { 
+      margin-top: 0; 
+      color: #1e1a17; 
+      border-bottom: 2px solid #d95f1a; 
+      padding-bottom: 12px; 
+      font-size: 24px;
+      text-align: center;
+    }
+    .instrucciones {
+      background: #fdf8f5;
+      border-left: 4px solid #d95f1a;
+      padding: 15px;
+      margin-bottom: 30px;
+      font-size: 14px;
+      color: #4a443e;
+    }
+    .instrucciones code { background: #eaeaea; padding: 2px 4px; border-radius: 3px; font-family: monospace; color: #1e1a17; }
+    .form-group { margin-bottom: 20px; }
+    .form-row { display: flex; gap: 20px; }
+    .form-row .form-group { flex: 1; }
+    label { display: block; font-weight: bold; margin-bottom: 6px; color: #4a443e; font-size: 14px; }
+    input[type="text"], textarea, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #cec8bc;
+      border-radius: 4px;
+      font-size: 15px;
+      box-sizing: border-box;
+      background-color: #fafafa;
+    }
+    input[type="text"]:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #d95f1a;
+      background-color: #ffffff;
+      box-shadow: 0 0 0 3px rgba(217,95,26,0.1);
+    }
+    textarea { resize: vertical; font-family: inherit; }
+    
+    /* Contenedor de acciones del formulario */
+    .form-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 25px;
+    }
+    .btn-submit {
+      background-color: #d95f1a;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+      flex: 1;
+    }
+    .btn-submit:hover { background-color: #b84d12; }
+    
+    .btn-preview {
+      background-color: #4a443e;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+      flex: 1;
+    }
+    .btn-preview:hover { background-color: #1e1a17; }
+
+    @media (max-width: 700px) {
+      .form-row { flex-direction: column; gap: 0; }
+      .form-actions { flex-direction: column; gap: 10px; }
+      body { padding: 20px 10px; }
+      #mainContainer { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="loginBox">
+    <h2>Control de Acceso</h2>
+    <p style="font-size: 14px; color: #666;">Ingresá la contraseña para acceder al generador de notas.</p>
+    <input type="password" id="passwordField" placeholder="Contraseña">
+    <button id="loginBtn">Ingresar</button>
+    <div id="error-msg">Contraseña incorrecta. Reintente.</div>
+  </div>
+
+  <div id="mainContainer">
+    <div class="editor-header">
+      <img src="../imagenes/logo.jpeg" alt="Tramas del Sur" class="editor-logo" />
+      <h1>Generador de Notas</h1>
+    </div>
+    
+    <div class="instrucciones">
+      <strong>Guía rápida para el Cuerpo de la Nota:</strong><br>
+      Escribí normal. Para aplicar formatos del formato original separá los bloques con <strong>dos ENTER</strong> y usá estos prefijos:
+      <ul style="margin: 5px 0 0 20px; padding: 0;">
+        <li><code>## Subtítulo</code> para un subtítulo principal de sección.</li>
+        <li><code>### Subtítulo</code> para un subtítulo secundario (itálica).</li>
+        <li><code>&gt; Texto de la cita</code> para insertar una cita destacada con borde naranja.</li>
+        <li><code>---</code> (tres guiones) para una línea divisoria gris simple.</li>
+        <li><code>~~~</code> (tres tildes de virgulilla) para insertar el <strong>hilo decorativo naranja ondeado</strong>.</li>
+      </ul>
+    </div>
+
+    <form id="generatorForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="categoria">Categoría</label>
+          <select id="categoria" name="categoria">
+            <option value="Editorial">Editorial</option>
+            <option value="Entrevista">Entrevista</option>
+            <option value="Ensayo">Ensayo</option>
+            <option value="Crónica">Crónica</option>
+            <option value="Reseña">Reseña</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="titulo">Título Principal</label>
+          <input type="text" id="titulo" name="titulo" required placeholder="Ej: La persistencia de la memoria">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="bajada">Bajada / Copete</label>
+        <textarea id="bajada" name="bajada" rows="2" placeholder="Una oración que amplía el título y engancha al lector."></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="autor">Autor</label>
+          <input type="text" id="autor" name="autor" placeholder="Ej: Juan Pérez">
+        </div>
+        <div class="form-group">
+          <label for="fecha">Fecha de Publicación</label>
+          <input type="text" id="fecha" name="fecha" placeholder="Ej: Mayo 2026">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="imagen">Nombre del archivo de imagen de portada (Opcional)</label>
+          <input type="text" id="imagen" name="imagen" placeholder="Ej: portada-nota.jpeg">
+        </div>
+        <div class="form-group">
+          <label for="img_alt">Descripción de la imagen (Accesibilidad)</label>
+          <input type="text" id="img_alt" name="img_alt" placeholder="Ej: Fotografía del puerto al amanecer">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="cuerpo">Cuerpo de la Nota</label>
+        <textarea id="cuerpo" name="cuerpo" rows="15" required placeholder="Escribí acá el contenido de la nota..."></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" id="previewBtn" class="btn-preview">Vista Previa</button>
+        <button type="submit" class="btn-submit">Generar y Descargar Archivo HTML</button>
+      </div>
+    </form>
+  </div>
+
+<script>
+// 1. MANEJO DE AUTENTICACIÓN
+function verificarClave() {
+  const clave = document.getElementById('passwordField').value;
+  const errorDiv = document.getElementById('error-msg');
+  
+  errorDiv.style.display = 'none';
+
+  if (clave === "notasentrama$") {
+    sessionStorage.setItem('auth_tramas', 'true');
+    mostrarGenerador();
+  } else {
+    errorDiv.style.display = 'block';
+  }
+}
+
+function mostrarGenerador() {
+  document.getElementById('loginBox').style.display = 'none';
+  document.getElementById('mainContainer').style.display = 'block';
+}
+
+document.getElementById('loginBtn').addEventListener('click', verificarClave);
+document.getElementById('passwordField').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') verificarClave();
+});
+
+if (sessionStorage.getItem('auth_tramas') === 'true') {
+  mostrarGenerador();
+}
+
+
+// 2. LÓGICA DEL GENERADOR DE NOTAS
+function escapeHtml(text) {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function procesarTextoAHtml(texto) {
+  texto = escapeHtml(texto);
+  texto = texto.replace(/\r\n|\r/g, "\n");
+  const bloques = texto.split("\n\n");
+  let htmlResultado = "";
+
+  bloques.forEach(bloque => {
+    bloque = bloque.trim();
+    if (!bloque) return;
+
+    if (bloque.indexOf('## ') === 0) {
+      htmlResultado += "      <h2>" + bloque.substring(3) + "</h2>\n";
+    } else if (bloque.indexOf('### ') === 0) {
+      htmlResultado += "      <h3>" + bloque.substring(4) + "</h3>\n";
+    } else if (bloque.indexOf('&gt; ') === 0) {
+      htmlResultado += "      <blockquote style=\"border-left: 3px solid var(--orange); padding: 0.5rem 0 0.5rem 1.8rem; margin: 2rem 0; font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.2rem; color: var(--ink-soft); line-height: 1.6;\">\n        \"" + bloque.substring(5) + "\"\n      </blockquote>\n";
+    } else if (bloque === '---') {
+      htmlResultado += "      <hr />\n";
+    } else if (bloque === '~~~') {
+      htmlResultado += "      <div class=\"thread-divider\">\n        <div class=\"thread-line\"></div>\n        <svg width=\"80\" height=\"20\" viewBox=\"0 0 80 20\" fill=\"none\">\n          <path d=\"M2 10 C8 4,14 16,20 10 S32 4,40 10 S52 16,60 10 S70 5,78 10\" stroke=\"#d95f1a\" stroke-width=\"1.8\" stroke-linecap=\"round\" fill=\"none\"/>\n        </svg>\n        <div class=\"thread-line\"></div>\n      </div>\n";
+    } else {
+      const contenido = bloque.replace(/\n/g, "<br />");
+      htmlResultado += "      <p>\n        " + contenido + "\n      </p>\n";
+    }
+  });
+
+  return htmlResultado;
+}
+
+function generarSlug(text) {
+  return text.toString().toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-]+/g, '')
+    .replace(/\-\-+/g, '-')
+    .replace(/^-+/, '')
+    .replace(/-+$/, '');
+}
+
+// Función centralizada para estructurar todo el HTML de la nota
+function construirHtmlNota() {
+  const categoria = document.getElementById('categoria').value;
+  const titulo = document.getElementById('titulo').value;
+  const bajada = document.getElementById('bajada').value;
+  const autor = document.getElementById('autor').value;
+  const fecha = document.getElementById('fecha').value;
+  const imagen = document.getElementById('imagen').value;
+  const img_alt = document.getElementById('img_alt').value;
+  const cuerpoRaw = document.getElementById('cuerpo').value;
+
+  const cuerpoHtml = procesarTextoAHtml(cuerpoRaw);
+
+  let bloqueImagen = "";
+  if (imagen.trim() !== "") {
+    // Apunta correctamente a ../imagenes/ desde la carpeta edicion/
+    bloqueImagen = "    <div class=\"article-cover\">\n      <img src=\"../imagenes/" + escapeHtml(imagen) + "\" alt=\"" + escapeHtml(img_alt) + "\" />\n    </div>\n";
+  }
+
+  let htmlFinal = "";
+  htmlFinal += "<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n  <meta charset=\"UTF-8\" />\n";
+  htmlFinal += "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n";
+  htmlFinal += "  <title>" + escapeHtml(titulo) + " — Tramas del Sur</title>\n\n";
+  htmlFinal += "  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\" />\n";
+  htmlFinal += "  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin />\n";
+  htmlFinal += "  <link href=\"https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap\" rel=\"stylesheet\" />\n\n";
+  htmlFinal += "  <style>\n";
+  htmlFinal += "    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }\n";
+  htmlFinal += "    :root {\n      --ink:       #1e1a17;\n      --ink-soft:  #4a443e;\n      --ink-muted: #8a837a;\n      --orange:    #d95f1a;\n      --paper:     #f0ece3;\n      --rule:      #cec8bc;\n    }\n";
+  htmlFinal += "    html { scroll-behavior: smooth; }\n";
+  htmlFinal += "    body {\n      background-color: var(--paper);\n      background-image: url('../imagenes/fondo.jpeg');\n      background-size: cover;\n      background-attachment: fixed;\n      color: var(--ink);\n      font-family: 'Lato', sans-serif;\n      font-weight: 300;\n      font-size: 17px;\n      line-height: 1.75;\n    }\n";
+  htmlFinal += "    body::before {\n      content: '';\n      position: fixed;\n      inset: 0;\n      background: rgba(240,236,227,0.78);\n      z-index: 0;\n      pointer-events: none;\n    }\n";
+  htmlFinal += "    nav {\n      position: fixed;\n      top: 0; left: 0; right: 0;\n      z-index: 100;\n      display: flex;\n      align-items: center;\n      justify-content: space-between;\n      padding: 0 3.5rem;\n      height: 60px;\n      background-image: url('../imagenes/fondo.jpeg');\n      background-size: cover;\n      border-bottom: 1px solid var(--rule);\n    }\n";
+  htmlFinal += "    nav::before {\n      content: '';\n      position: absolute;\n      inset: 0;\n      background: rgba(240,236,227,0.88);\n      z-index: 0;\n    }\n";
+  htmlFinal += "    nav > * { position: relative; z-index: 1; }\n";
+  htmlFinal += "    .nav-logo img {\n      height: 36px;\n      width: auto;\n      display: block;\n      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);\n    }\n";
+  htmlFinal += "    .nav-logo img:hover { transform: scale(1.1); }\n";
+  htmlFinal += "    .btn-volver {\n      display: inline-flex;\n      align-items: center;\n      gap: 0.5rem;\n      font-size: 0.76rem;\n      letter-spacing: 0.12em;\n      text-transform: uppercase;\n      color: var(--ink-soft);\n      text-decoration: none;\n      transition: color 0.2s;\n    }\n";
+  htmlFinal += "    .btn-volver:hover { color: var(--orange); }\n";
+  htmlFinal += "    .btn-volver svg {\n      width: 14px; height: 14px;\n      stroke: currentColor; fill: none;\n      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;\n    }\n";
+  htmlFinal += "    main {\n      position: relative;\n      z-index: 1;\n      max-width: 760px;\n      margin: 0 auto;\n      padding: 7rem 2rem 6rem;\n    }\n";
+  htmlFinal += "    .article-header {\n      margin-bottom: 3rem;\n      padding-bottom: 2rem;\n      border-bottom: 1px solid var(--rule);\n    }\n";
+  htmlFinal += "    .article-categoria {\n      font-size: 0.7rem;\n      letter-spacing: 0.22em;\n      text-transform: uppercase;\n      color: var(--orange);\n      margin-bottom: 1rem;\n    }\n";
+  htmlFinal += "    .article-titulo {\n      font-family: 'Playfair Display', serif;\n      font-size: clamp(2rem, 5vw, 3.2rem);\n      font-weight: 400;\n      line-height: 1.15;\n      margin-bottom: 1.2rem;\n    }\n";
+  htmlFinal += "    .article-bajada {\n      font-family: 'Playfair Display', serif;\n      font-style: italic;\n      font-size: 1.15rem;\n      color: var(--ink-soft);\n      line-height: 1.65;\n      margin-bottom: 1.5rem;\n    }\n";
+  htmlFinal += "    .article-meta {\n      display: flex;\n      align-items: center;\n      gap: 1.5rem;\n      font-size: 0.78rem;\n      color: var(--ink-muted);\n      letter-spacing: 0.04em;\n    }\n";
+  htmlFinal += "    .article-meta span { display: flex; align-items: center; gap: 0.4rem; }\n";
+  htmlFinal += "    .article-cover {\n      width: 100%;\n      border-radius: 3px;\n      overflow: hidden;\n      margin-bottom: 2.5rem;\n    }\n";
+  htmlFinal += "    .article-cover img {\n      width: 100%;\n      height: auto;\n      display: block;\n    }\n";
+  htmlFinal += "    .article-body {\n      font-size: 1.05rem;\n      line-height: 1.85;\n      color: var(--ink);\n    }\n";
+  htmlFinal += "    .article-body p { margin-bottom: 1.5rem; }\n";
+  htmlFinal += "    .article-body h2 {\n      font-family: 'Playfair Display', serif;\n      font-size: 1.5rem;\n      font-weight: 400;\n      margin: 2.5rem 0 1rem;\n      color: var(--ink);\n    }\n";
+  htmlFinal += "    .article-body h3 {\n      font-family: 'Playfair Display', serif;\n      font-size: 1.15rem;\n      font-style: italic;\n      font-weight: 400;\n      margin: 2rem 0 0.8rem;\n      color: var(--ink-soft);\n    }\n";
+  htmlFinal += "    .article-body blockquote {\n      border-left: 3px solid var(--orange);\n      padding: 0.5rem 0 0.5rem 1.8rem;\n      margin: 2rem 0;\n      font-family: 'Playfair Display', serif;\n      font-style: italic;\n      font-size: 1.2rem;\n      color: var(--ink-soft);\n      line-height: 1.6;\n    }\n";
+  htmlFinal += "    .article-body hr {\n      border: none;\n      border-top: 1px solid var(--rule);\n      margin: 2.5rem 0;\n    }\n";
+  htmlFinal += "    .thread-divider {\n      display: flex;\n      align-items: center;\n      gap: 1rem;\n      margin: 2.5rem 0;\n    }\n";
+  htmlFinal += "    .thread-line { flex: 1; height: 1px; background: var(--rule); }\n";
+  htmlFinal += "    .article-footer {\n      margin-top: 4rem;\n      padding-top: 2rem;\n      border-top: 1px solid var(--rule);\n      display: flex;\n      align-items: center;\n      justify-content: space-between;\n      flex-wrap: wrap;\n      gap: 1rem;\n    }\n";
+  htmlFinal += "    .article-footer-logo img {\n      height: 28px;\n      opacity: 0.75;\n      transition: opacity 0.2s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);\n    }\n";
+  htmlFinal += "    .article-footer-logo img:hover { opacity: 1; transform: scale(1.08); }\n";
+  htmlFinal += "    .btn-volver-pie {\n      display: inline-flex;\n      align-items: center;\n      gap: 0.5rem;\n      padding: 0.7rem 1.6rem;\n      background: var(--ink);\n      color: #fff;\n      font-size: 0.75rem;\n      letter-spacing: 0.12em;\n      text-transform: uppercase;\n      text-decoration: none;\n      border-radius: 2px;\n      transition: background 0.2s;\n    }\n";
+  htmlFinal += "    .btn-volver-pie:hover { background: var(--orange); }\n";
+  htmlFinal += "    .btn-volver-pie svg {\n      width: 13px; height: 13px;\n      stroke: #fff; fill: none;\n      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;\n    }\n";
+  htmlFinal += "    @media (max-width: 700px) {\n      nav { padding: 0 1.5rem; }\n      main { padding: 6rem 1.2rem 4rem; }\n    }\n  </style>\n</head>\n<body>\n\n";
+  htmlFinal += "  <nav>\n    <a href=\"https://tramasdelsur.com.ar\" class=\"nav-logo\">\n      <img src=\"../imagenes/logo.jpeg\" alt=\"Tramas del Sur\" />\n    </a>\n";
+  htmlFinal += "    <a href=\"https://tramasdelsur.com.ar\" class=\"btn-volver\">\n      <svg viewBox=\"0 0 24 24\"><path d=\"M19 12H5M12 5l-7 7 7 7\"/></svg>\n      Volver al inicio\n    </a>\n  </nav>\n\n";
+  htmlFinal += "  <main>\n    <header class=\"article-header\">\n";
+  htmlFinal += "      <p class=\"article-categoria\">" + escapeHtml(categoria) + "</p>\n";
+  htmlFinal += "      <h1 class=\"article-titulo\">" + escapeHtml(titulo) + "</h1>\n";
+  htmlFinal += "      <p class=\"article-bajada\">" + escapeHtml(bajada) + "</p>\n";
+  htmlFinal += "      <div class=\"article-meta\">\n";
+  htmlFinal += "        <span>Por " + escapeHtml(autor) + "</span>\n";
+  htmlFinal += "        <span>" + escapeHtml(fecha) + "</span>\n";
+  htmlFinal += "      </div>\n    </header>\n\n";
+  htmlFinal += bloqueImagen;
+  htmlFinal += "    <article class=\"article-body\">\n";
+  htmlFinal += cuerpoHtml;
+  htmlFinal += "    </article>\n\n";
+  htmlFinal += "    <footer class=\"article-footer\">\n";
+  htmlFinal += "      <a href=\"https://tramasdelsur.com.ar\" class=\"article-footer-logo\">\n        <img src=\"../imagenes/logo.jpeg\" alt=\"Tramas del Sur\" />\n      </a>\n";
+  htmlFinal += "      <a href=\"https://tramasdelsur.com.ar\" class=\"btn-volver-pie\">\n        <svg viewBox=\"0 0 24 24\"><path d=\"M19 12H5M12 5l-7 7 7 7\"/></svg>\n        Volver al inicio\n      </a>\n    </footer>\n  </main>\n\n</body>\n</html>";
+
+  return htmlFinal;
+}
+
+// Acción 1: Vista Previa (Abre pestaña nueva e inyecta el código directamente)
+document.getElementById('previewBtn').addEventListener('click', function() {
+  if (!document.getElementById('titulo').value || !document.getElementById('cuerpo').value) {
+    alert("Por favor, completa al menos el Título y el Cuerpo de la nota para ver la vista previa.");
+    return;
+  }
+  
+  const htmlContenido = construirHtmlNota();
+  const ventanaPreview = window.open('', '_blank');
+  
+  if (ventanaPreview) {
+    ventanaPreview.document.open();
+    ventanaPreview.document.write(htmlContenido);
+    ventanaPreview.document.close();
+  } else {
+    alert("El navegador bloqueó la ventana emergente. Por favor, permití los pop-ups para este sitio.");
+  }
+});
+
+// Acción 2: Descarga del archivo final
+document.getElementById('generatorForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const titulo = document.getElementById('titulo').value;
+  const htmlFinal = construirHtmlNota();
+
+  const blob = new Blob([htmlFinal], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const dummyAnchor = document.createElement('a');
+  dummyAnchor.href = url;
+  dummyAnchor.download = generarSlug(titulo) + ".html";
+  
+  document.body.appendChild(dummyAnchor);
+  dummyAnchor.click();
+  document.body.removeChild(dummyAnchor);
+  URL.revokeObjectURL(url);
+});
+</script>
+</body>
+</html>
