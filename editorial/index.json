@@ -1,14 +1,5 @@
 [
   {
-    "archivo":     "inicios.html",
-    "titulo":      "Los inicios de la revista",
-    "descripcion": "Cómo nació Tramas del Sur, qué nos llevó a crear una revista independiente y qué queremos construir desde el sur.",
-    "categoria":   "Editorial",
-    "autor":       "Karina Villalba",
-    "fecha":       "Mayo 2026",
-    "imagen":      "inicios.jpeg"
-  },
-  {
     "archivo": "nota-editorial.html",
     "titulo": "Nota editorial",
     "descripcion": "En palabras de Eduardo Galeano: “Quien escribe, teje. Texto proviene del latín, ‘textum’ que significa tejido. Con hilos de palabras vamos diciendo, con hilos de tiempo vamos viviendo. Los textos son como nosotros: tejidos que andan” ",
@@ -16,5 +7,5 @@
     "autor": "Karina Villalba",
     "fecha": "Abril 2026",
     "imagen": ""
-  }
+  } // Para agregar una nueva nota se debe incluir la coma  " , "
 ]
