@@ -344,7 +344,7 @@ function procesarTextoAHtml(texto) {
   let htmlResultado = "";
 
   bloques.forEach(bloque => {
-    bloque = block = bloque.trim();
+    bloque = bloque.trim();
     if (!bloque) return;
 
     if (bloque.indexOf('## ') === 0) {
@@ -384,7 +384,6 @@ function obtenerNombreImagen() {
   return "";
 }
 
-// esPreview define si ajustamos las rutas para que se rendericen bien localmente en la pestaña del editor
 function construirHtmlNota(esPreview = false) {
   const categoria = document.getElementById('categoria').value;
   const titulo = document.getElementById('titulo').value;
@@ -397,12 +396,14 @@ function construirHtmlNota(esPreview = false) {
   const imagen = obtenerNombreImagen();
   const cuerpoHtml = procesarTextoAHtml(cuerpoRaw);
 
-  // Tanto para preview local en vivo como para producción definitiva, apuntamos a la subcarpeta imagenes-notas/
-  const rutaImagenes = esPreview ? "../editorial/imagenes-notas/" : "../editorial/imagenes-notas/";
+  // Rutas fijas para los recursos del sitio
+  const rutaEstructura = "../imagenes/";
+  // Ruta para las imágenes propias de las notas
+  const rutaImagenesNotas = "../editorial/imagenes-notas/";
 
   let bloqueImagen = "";
   if (imagen.trim() !== "") {
-    let srcImagen = rutaImagenes + escapeHtml(imagen);
+    let srcImagen = rutaImagenesNotas + escapeHtml(imagen);
     if (esPreview) {
       const fileInput = document.getElementById('imagenInput');
       if (fileInput.files && fileInput.files.length > 0) {
@@ -423,9 +424,9 @@ function construirHtmlNota(esPreview = false) {
   htmlFinal += "    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }\n";
   htmlFinal += "    :root {\n      --ink:       #1e1a17;\n      --ink-soft:  #4a443e;\n      --ink-muted: #8a837a;\n      --orange:    #d95f1a;\n      --paper:     #f0ece3;\n      --rule:      #cec8bc;\n    }\n";
   htmlFinal += "    html { scroll-behavior: smooth; }\n";
-  htmlFinal += "    body {\n      background-color: var(--paper);\n      background-image: url('" + rutaImagenes + "fondo.jpeg');\n      background-size: cover;\n      background-attachment: fixed;\n      color: var(--ink);\n      font-family: 'Lato', sans-serif;\n      font-weight: 300;\n      font-size: 17px;\n      line-height: 1.75;\n    }\n";
+  htmlFinal += "    body {\n      background-color: var(--paper);\n      background-image: url('" + rutaEstructura + "fondo.jpeg');\n      background-size: cover;\n      background-attachment: fixed;\n      color: var(--ink);\n      font-family: 'Lato', sans-serif;\n      font-weight: 300;\n      font-size: 17px;\n      line-height: 1.75;\n    }\n";
   htmlFinal += "    body::before {\n      content: '';\n      position: fixed;\n      inset: 0;\n      background: rgba(240,236,227,0.78);\n      z-index: 0;\n      pointer-events: none;\n    }\n";
-  htmlFinal += "    nav {\n      position: fixed;\n      top: 0; left: 0; right: 0;\n      z-index: 100;\n      display: flex;\n      align-items: center;\n      justify-content: space-between;\n      padding: 0 3.5rem;\n      height: 60px;\n      background-image: url('" + rutaImagenes + "fondo.jpeg');\n      background-size: cover;\n      border-bottom: 1px solid var(--rule);\n    }\n";
+  htmlFinal += "    nav {\n      position: fixed;\n      top: 0; left: 0; right: 0;\n      z-index: 100;\n      display: flex;\n      align-items: center;\n      justify-content: space-between;\n      padding: 0 3.5rem;\n      height: 60px;\n      background-image: url('" + rutaEstructura + "fondo.jpeg');\n      background-size: cover;\n      border-bottom: 1px solid var(--rule);\n    }\n";
   htmlFinal += "    nav::before {\n      content: '';\n      position: absolute;\n      inset: 0;\n      background: rgba(240,236,227,0.88);\n      z-index: 0;\n    }\n";
   htmlFinal += "    nav > * { position: relative; z-index: 1; }\n";
   htmlFinal += "    .nav-logo img {\n      height: 36px;\n      width: auto;\n      display: block;\n      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);\n    }\n";
@@ -457,7 +458,7 @@ function construirHtmlNota(esPreview = false) {
   htmlFinal += "    .btn-volver-pie:hover { background: var(--orange); }\n";
   htmlFinal += "    .btn-volver-pie svg {\n      width: 13px; height: 13px;\n      stroke: #fff; fill: none;\n      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;\n    }\n";
   htmlFinal += "    @media (max-width: 700px) {\n      nav { padding: 0 1.5rem; }\n      main { padding: 6rem 1.2rem 4rem; }\n    }\n  </style>\n</head>\n<body>\n\n";
-  htmlFinal += "  <nav>\n    <a href=\"https://tramasdelsur.com.ar\" class=\"nav-logo\">\n      <img src=\"" + rutaImagenes + "logo.jpeg\" alt=\"Tramas del Sur\" />\n    </a>\n";
+  htmlFinal += "  <nav>\n    <a href=\"https://tramasdelsur.com.ar\" class=\"nav-logo\">\n      <img src=\"" + rutaEstructura + "logo.jpeg\" alt=\"Tramas del Sur\" />\n    </a>\n";
   htmlFinal += "    <a href=\"https://tramasdelsur.com.ar\" class=\"btn-volver\">\n      <svg viewBox=\"0 0 24 24\"><path d=\"M19 12H5M12 5l-7 7 7 7\"/></svg>\n      Volver al inicio\n    </a>\n  </nav>\n\n";
   htmlFinal += "  <main>\n    <header class=\"article-header\">\n";
   htmlFinal += "      <p class=\"article-categoria\">" + escapeHtml(categoria) + "</p>\n";
@@ -472,7 +473,7 @@ function construirHtmlNota(esPreview = false) {
   htmlFinal += cuerpoHtml;
   htmlFinal += "    </article>\n\n";
   htmlFinal += "    <footer class=\"article-footer\">\n";
-  htmlFinal += "      <a href=\"https://tramasdelsur.com.ar\" class=\"article-footer-logo\">\n        <img src=\"" + rutaImagenes + "logo.jpeg\" alt=\"Tramas del Sur\" />\n      </a>\n";
+  htmlFinal += "      <a href=\"https://tramasdelsur.com.ar\" class=\"article-footer-logo\">\n        <img src=\"" + rutaEstructura + "logo.jpeg\" alt=\"Tramas del Sur\" />\n      </a>\n";
   htmlFinal += "      <a href=\"https://tramasdelsur.com.ar\" class=\"btn-volver-pie\">\n        <svg viewBox=\"0 0 24 24\"><path d=\"M19 12H5M12 5l-7 7 7 7\"/></svg>\n        Volver al inicio\n      </a>\n    </footer>\n  </main>\n\n</body>\n</html>";
 
   return htmlFinal;
@@ -490,8 +491,11 @@ function construirJsonNota() {
     "categoria":   document.getElementById('categoria').value,
     "autor":       document.getElementById('autor').value || "Tramas del Sur",
     "fecha":       document.getElementById('fecha').value,
-    "imagen":      imagen ? "../editorial/imagenes-notas/" + imagen : ""
+    "imagen":      imagen ? "../editorial/imagenes-notes/" + imagen : ""
   };
+
+  // Ajustado también aquí el path del JSON dinámico para que use 'imagenes-notas'
+  objetoJson.imagen = imagen ? "../editorial/imagenes-notas/" + imagen : "";
 
   return JSON.stringify(objetoJson, null, 2);
 }
