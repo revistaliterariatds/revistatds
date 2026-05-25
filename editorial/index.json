@@ -16,5 +16,14 @@
         "autor": "Karina Villalba",
         "fecha": "JUNIO 2026",
         "imagen": "../imagenes/logoencabezado2.png"
+    },
+    {
+        "archivo": "prueba.html",
+        "titulo": "prueba",
+        "descripcion": "fasfas",
+        "categoria": "Editorial",
+        "autor": "sfasfas",
+        "fecha": "fasfas",
+        "imagen": "../editorial/imagenes-notas/Imagen pegada.png"
     }
 ]
