@@ -1,6 +1,4 @@
-{
-  "instrucciones": "Para agregar una nueva nota, inserte una coma al final del objeto previo.",
-  "articulos": [
+[
     {
       "archivo": "nota-editorial.html",
       "titulo": "Nota editorial",
@@ -10,5 +8,4 @@
       "fecha": "Abril 2026",
       "imagen": ""
     }
-  ]
-}
+]
