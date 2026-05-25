@@ -9,12 +9,12 @@
     "imagen":      "inicios.jpeg"
   }
   {
-  ||"archivo": "nota-editorial.html",
-  ||"titulo": "Nota editorial",
-  ||"descripcion": "En palabras de Eduardo Galeano: “Quien escribe, teje. Texto proviene del latín, ‘textum’ que significa tejido. Con hilos de palabras vamos diciendo, con hilos de tiempo vamos viviendo. Los textos son como nosotros: tejidos que andan” ",
-  ||"categoria": "Editorial",
-  ||"autor": "Karina Villalba",
-  ||"fecha": "Abril 2026",
-  ||"imagen": ""
+    "archivo": "nota-editorial.html",
+    "titulo": "Nota editorial",
+    "descripcion": "En palabras de Eduardo Galeano: “Quien escribe, teje. Texto proviene del latín, ‘textum’ que significa tejido. Con hilos de palabras vamos diciendo, con hilos de tiempo vamos viviendo. Los textos son como nosotros: tejidos que andan” ",
+    "categoria": "Editorial",
+    "autor": "Karina Villalba",
+    "fecha": "Abril 2026",
+    "imagen": ""
   }
 ]
