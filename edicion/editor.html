@@ -444,11 +444,11 @@ function construirHtmlNota(esPreview = false) {
   htmlFinal += "    .article-meta span { display: flex; align-items: center; gap: 0.4rem; }\n";
   htmlFinal += "    .article-cover {\n      width: 100%;\n      border-radius: 3px;\n      overflow: hidden;\n      margin-bottom: 2.5rem;\n    }\n";
   htmlFinal += "    .article-cover img {\n      width: 100%;\n      height: auto;\n      display: block;\n    }\n";
-  htmlFinal += "    .article-body {\n      font-size: 1.05rem;\n      line-height: 1.85;\n      color: var(--ink);\n    }\n";
+  htmlFinal += "    .article-body {\n      font-size: 1.05rem;\n      line-height: 1.85;\n      color: var(--ink);\n      text-align: justify;\n      text-justify: inter-word;\n    }\n";
   htmlFinal += "    .article-body p { margin-bottom: 1.5rem; }\n";
-  htmlFinal += "    .article-body h2 {\n      font-family: 'Playfair Display', serif;\n      font-size: 1.5rem;\n      font-weight: 400;\n      margin: 2.5rem 0 1rem;\n      color: var(--ink);\n    }\n";
-  htmlFinal += "    .article-body h3 {\n      font-family: 'Playfair Display', serif;\n      font-size: 1.15rem;\n      font-style: italic;\n      font-weight: 400;\n      margin: 2rem 0 0.8rem;\n      color: var(--ink-soft);\n    }\n";
-  htmlFinal += "    .article-body blockquote {\n      border-left: 3px solid var(--orange);\n      padding: 0.5rem 0 0.5rem 1.8rem;\n      margin: 2rem 0;\n      font-family: 'Playfair Display', serif;\n      font-style: italic;\n      font-size: 1.2rem;\n      color: var(--ink-soft);\n      line-height: 1.6;\n    }\n";
+  htmlFinal += "    .article-body h2 {\n      font-family: 'Playfair Display', serif;\n      font-size: 1.5rem;\n      font-weight: 400;\n      margin: 2.5rem 0 1rem;\n      color: var(--ink);\n      text-align: left;\n    }\n";
+  htmlFinal += "    .article-body h3 {\n      font-family: 'Playfair Display', serif;\n      font-size: 1.15rem;\n      font-style: italic;\n      font-weight: 400;\n      margin: 2rem 0 0.8rem;\n      color: var(--ink-soft);\n      text-align: left;\n    }\n";
+  htmlFinal += "    .article-body blockquote {\n      border-left: 3px solid var(--orange);\n      padding: 0.5rem 0 0.5rem 1.8rem;\n      margin: 2rem 0;\n      font-family: 'Playfair Display', serif;\n      font-style: italic;\n      font-size: 1.2rem;\n      color: var(--ink-soft);\n      line-height: 1.6;\n      text-align: left;\n    }\n";
   htmlFinal += "    .article-body hr {\n      border: none;\n      border-top: 1px solid var(--rule);\n      margin: 2.5rem 0;\n    }\n";
   htmlFinal += "    .thread-divider {\n      display: flex;\n      align-items: center;\n      gap: 1rem;\n      margin: 2.5rem 0;\n    }\n";
   htmlFinal += "    .thread-line { flex: 1; height: 1px; background: var(--rule); }\n";
@@ -480,6 +480,7 @@ function construirHtmlNota(esPreview = false) {
   return htmlFinal;
 }
 
+// (El resto de las funciones auxiliares e interceptores de eventos permanecen idénticos)
 function construirJsonNota() {
   const titulo = document.getElementById('titulo').value;
   const slug = generarSlug(titulo);
@@ -498,14 +499,12 @@ function construirJsonNota() {
   return JSON.stringify(objetoJson, null, 2);
 }
 
-// Acción 1: Vista Previa
 document.getElementById('previewBtn').addEventListener('click', function() {
   if (!document.getElementById('titulo').value || !document.getElementById('cuerpo').value) {
     alert("Por favor, completa al menos el Título y el Cuerpo de la nota para ver la vista previa.");
     return;
   }
   
-  // Pasamos 'true' porque es entorno de Vista Previa local/GitHub Pages
   const htmlContenido = construirHtmlNota(true);
   const ventanaPreview = window.open('', '_blank');
   
@@ -518,16 +517,13 @@ document.getElementById('previewBtn').addEventListener('click', function() {
   }
 });
 
-// Acción 2: Descarga del Pack (.zip conteniendo HTML + JSON + Imagen Adjunta opcional)
 document.getElementById('generatorForm').addEventListener('submit', function(e) {
   e.preventDefault();
 
   const titulo = document.getElementById('titulo').value;
   const slug = generarSlug(titulo);
-
   const zip = new JSZip();
 
-  // Pasamos 'false' porque es la nota de producción que irá a la raíz del sitio final
   const htmlFinal = construirHtmlNota(false);
   const jsonFinal = construirJsonNota();
 
