@@ -16,5 +16,14 @@
         "autor": "Karina Villalba",
         "fecha": "Abril 2026",
         "imagen": ""
+    },
+    {
+        "archivo": "convocatoria-para-la-comunidad-en-general.html",
+        "titulo": "Convocatoria para la comunidad en general",
+        "descripcion": "La revista Tramas del Sur invita a la comunidad en general a ser parte de este proyecto colectivo, a través del envío de producciones escritas y/o gráficas. ",
+        "categoria": "Editorial",
+        "autor": "Karina Villalba",
+        "fecha": "JUNIO 2026",
+        "imagen": "../imagenes/logoencabezado2.png"
     }
 ]
