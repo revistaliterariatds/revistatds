@@ -398,8 +398,8 @@ function construirHtmlNota(esPreview = false) {
   const cuerpoHtml = procesarTextoAHtml(cuerpoRaw);
 
   // Si es Preview, forzamos a que busque las imágenes subiendo un nivel relativo a /edicion/
-  // Si es producción, asume que la nota final vivirá en la raíz y busca en '../imagenes/'
-  const rutaImagenes = esPreview ? "../imagenes/" : "../imagenes/";
+  // Si es producción, asume que la nota final vivirá en la raíz y busca en 'editorial/imagenes-notas/'
+  const rutaImagenes = esPreview ? "../editorial/imagenes-notas/" : "../editorial/imagenes-notas/";
 
   let bloqueImagen = "";
   if (imagen.trim() !== "") {
