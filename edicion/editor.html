@@ -130,7 +130,7 @@
     .form-row { display: flex; gap: 20px; }
     .form-row .form-group { flex: 1; }
     label { display: block; font-weight: bold; margin-bottom: 6px; color: #4a443e; font-size: 14px; }
-    input[type="text"], textarea, select {
+    input[type="text"], input[type="file"], textarea, select {
       width: 100%;
       padding: 10px;
       border: 1px solid #cec8bc;
@@ -145,6 +145,10 @@
       background-color: #ffffff;
       box-shadow: 0 0 0 3px rgba(217,95,26,0.1);
     }
+    input[type="file"] {
+      background: #fafafa;
+      cursor: pointer;
+    }
     textarea { resize: vertical; font-family: inherit; }
     
     /* Contenedor de acciones del formulario */
@@ -152,6 +156,11 @@
       display: flex;
       gap: 15px;
       margin-top: 25px;
+    }
+    .action-block {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
     .btn-submit {
       background-color: #d95f1a;
@@ -163,7 +172,7 @@
       border-radius: 4px;
       cursor: pointer;
       transition: background 0.2s;
-      flex: 1;
+      width: 100%;
     }
     .btn-submit:hover { background-color: #b84d12; }
     
@@ -177,15 +186,21 @@
       border-radius: 4px;
       cursor: pointer;
       transition: background 0.2s;
-      flex: 1;
+      width: 100%;
     }
     .btn-preview:hover { background-color: #1e1a17; }
 
+    .action-desc {
+      display: block;
+      font-size: 12px;
+      color: #726a5f;
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
     @media (max-width: 700px) {
       .form-row { flex-direction: column; gap: 0; }
-      .form-actions { flex-direction: column; gap: 10px; }
-      body { padding: 20px 10px; }
-      #mainContainer { padding: 20px; }
+      .form-actions { flex-direction: column; gap: 15px; }
     }
   </style>
 </head>
@@ -253,8 +268,8 @@
 
       <div class="form-row">
         <div class="form-group">
-          <label for="imagen">Nombre del archivo de imagen de portada (Opcional)</label>
-          <input type="text" id="imagen" name="imagen" placeholder="Ej: portada-nota.jpeg">
+          <label for="imagenInput">Adjuntar Imagen de Portada (Opcional)</label>
+          <input type="file" id="imagenInput" accept="image/*">
         </div>
         <div class="form-group">
           <label for="img_alt">Descripción de la imagen (Accesibilidad)</label>
@@ -268,8 +283,15 @@
       </div>
 
       <div class="form-actions">
-        <button type="button" id="previewBtn" class="btn-preview">Vista Previa</button>
-        <button type="submit" class="btn-submit">Generar y Descargar Pack (.zip)</button>
+        <div class="action-block">
+          <button type="button" id="previewBtn" class="btn-preview" title="Generar una vista previa interactiva de la nota">Vista Previa</button>
+          <span class="action-desc">Permite generar una vista previa completa de la nota en una pestaña nueva para revisar su diseño.</span>
+        </div>
+        
+        <div class="action-block">
+          <button type="submit" class="btn-submit" title="Generar el paquete final para revisión y publicación">Generar y Descargar Pack (.zip)</button>
+          <span class="action-desc">Genera el paquete de archivos estructurado listo para enviar al editor para su revisión y publicación definitiva.</span>
+        </div>
       </div>
     </form>
   </div>
@@ -354,22 +376,42 @@ function generarSlug(text) {
     .replace(/-+$/, '');
 }
 
-// Función centralizada para estructurar todo el HTML de la nota
-function construirHtmlNota() {
+function obtenerNombreImagen() {
+  const fileInput = document.getElementById('imagenInput');
+  if (fileInput.files && fileInput.files.length > 0) {
+    return fileInput.files[0].name;
+  }
+  return "";
+}
+
+// esPreview define si ajustamos las rutas para que se rendericen bien localmente en la pestaña del editor
+function construirHtmlNota(esPreview = false) {
   const categoria = document.getElementById('categoria').value;
   const titulo = document.getElementById('titulo').value;
   const bajada = document.getElementById('bajada').value;
   const autor = document.getElementById('autor').value;
   const fecha = document.getElementById('fecha').value;
-  const imagen = document.getElementById('imagen').value;
   const img_alt = document.getElementById('img_alt').value;
   const cuerpoRaw = document.getElementById('cuerpo').value;
-
+  
+  const imagen = obtenerNombreImagen();
   const cuerpoHtml = procesarTextoAHtml(cuerpoRaw);
+
+  // Si es Preview, forzamos a que busque las imágenes subiendo un nivel relativo a /edicion/
+  // Si es producción, asume que la nota final vivirá en la raíz y busca en './imagenes/'
+  const rutaImagenes = esPreview ? "../imagenes/" : "./imagenes/";
 
   let bloqueImagen = "";
   if (imagen.trim() !== "") {
-    bloqueImagen = "    <div class=\"article-cover\">\n      <img src=\"../imagenes/" + escapeHtml(imagen) + "\" alt=\"" + escapeHtml(img_alt) + "\" />\n    </div>\n";
+    // Si es preview y tenemos un objeto de archivo local subido, creamos un ObjectURL para mostrarlo inmediatamente sin que rompa por no existir en el servidor todavía
+    let srcImagen = rutaImagenes + escapeHtml(imagen);
+    if (esPreview) {
+      const fileInput = document.getElementById('imagenInput');
+      if (fileInput.files && fileInput.files.length > 0) {
+        srcImagen = URL.createObjectURL(fileInput.files[0]);
+      }
+    }
+    bloqueImagen = "    <div class=\"article-cover\">\n      <img src=\"" + srcImagen + "\" alt=\"" + escapeHtml(img_alt) + "\" />\n    </div>\n";
   }
 
   let htmlFinal = "";
@@ -383,9 +425,9 @@ function construirHtmlNota() {
   htmlFinal += "    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }\n";
   htmlFinal += "    :root {\n      --ink:       #1e1a17;\n      --ink-soft:  #4a443e;\n      --ink-muted: #8a837a;\n      --orange:    #d95f1a;\n      --paper:     #f0ece3;\n      --rule:      #cec8bc;\n    }\n";
   htmlFinal += "    html { scroll-behavior: smooth; }\n";
-  htmlFinal += "    body {\n      background-color: var(--paper);\n      background-image: url('../imagenes/fondo.jpeg');\n      background-size: cover;\n      background-attachment: fixed;\n      color: var(--ink);\n      font-family: 'Lato', sans-serif;\n      font-weight: 300;\n      font-size: 17px;\n      line-height: 1.75;\n    }\n";
+  htmlFinal += "    body {\n      background-color: var(--paper);\n      background-image: url('" + rutaImagenes + "fondo.jpeg');\n      background-size: cover;\n      background-attachment: fixed;\n      color: var(--ink);\n      font-family: 'Lato', sans-serif;\n      font-weight: 300;\n      font-size: 17px;\n      line-height: 1.75;\n    }\n";
   htmlFinal += "    body::before {\n      content: '';\n      position: fixed;\n      inset: 0;\n      background: rgba(240,236,227,0.78);\n      z-index: 0;\n      pointer-events: none;\n    }\n";
-  htmlFinal += "    nav {\n      position: fixed;\n      top: 0; left: 0; right: 0;\n      z-index: 100;\n      display: flex;\n      align-items: center;\n      justify-content: space-between;\n      padding: 0 3.5rem;\n      height: 60px;\n      background-image: url('../imagenes/fondo.jpeg');\n      background-size: cover;\n      border-bottom: 1px solid var(--rule);\n    }\n";
+  htmlFinal += "    nav {\n      position: fixed;\n      top: 0; left: 0; right: 0;\n      z-index: 100;\n      display: flex;\n      align-items: center;\n      justify-content: space-between;\n      padding: 0 3.5rem;\n      height: 60px;\n      background-image: url('" + rutaImagenes + "fondo.jpeg');\n      background-size: cover;\n      border-bottom: 1px solid var(--rule);\n    }\n";
   htmlFinal += "    nav::before {\n      content: '';\n      position: absolute;\n      inset: 0;\n      background: rgba(240,236,227,0.88);\n      z-index: 0;\n    }\n";
   htmlFinal += "    nav > * { position: relative; z-index: 1; }\n";
   htmlFinal += "    .nav-logo img {\n      height: 36px;\n      width: auto;\n      display: block;\n      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);\n    }\n";
@@ -417,7 +459,7 @@ function construirHtmlNota() {
   htmlFinal += "    .btn-volver-pie:hover { background: var(--orange); }\n";
   htmlFinal += "    .btn-volver-pie svg {\n      width: 13px; height: 13px;\n      stroke: #fff; fill: none;\n      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;\n    }\n";
   htmlFinal += "    @media (max-width: 700px) {\n      nav { padding: 0 1.5rem; }\n      main { padding: 6rem 1.2rem 4rem; }\n    }\n  </style>\n</head>\n<body>\n\n";
-  htmlFinal += "  <nav>\n    <a href=\"https://tramasdelsur.com.ar\" class=\"nav-logo\">\n      <img src=\"../imagenes/logo.jpeg\" alt=\"Tramas del Sur\" />\n    </a>\n";
+  htmlFinal += "  <nav>\n    <a href=\"https://tramasdelsur.com.ar\" class=\"nav-logo\">\n      <img src=\"" + rutaImagenes + "logo.jpeg\" alt=\"Tramas del Sur\" />\n    </a>\n";
   htmlFinal += "    <a href=\"https://tramasdelsur.com.ar\" class=\"btn-volver\">\n      <svg viewBox=\"0 0 24 24\"><path d=\"M19 12H5M12 5l-7 7 7 7\"/></svg>\n      Volver al inicio\n    </a>\n  </nav>\n\n";
   htmlFinal += "  <main>\n    <header class=\"article-header\">\n";
   htmlFinal += "      <p class=\"article-categoria\">" + escapeHtml(categoria) + "</p>\n";
@@ -432,16 +474,16 @@ function construirHtmlNota() {
   htmlFinal += cuerpoHtml;
   htmlFinal += "    </article>\n\n";
   htmlFinal += "    <footer class=\"article-footer\">\n";
-  htmlFinal += "      <a href=\"https://tramasdelsur.com.ar\" class=\"article-footer-logo\">\n        <img src=\"../imagenes/logo.jpeg\" alt=\"Tramas del Sur\" />\n      </a>\n";
+  htmlFinal += "      <a href=\"https://tramasdelsur.com.ar\" class=\"article-footer-logo\">\n        <img src=\"" + rutaImagenes + "logo.jpeg\" alt=\"Tramas del Sur\" />\n      </a>\n";
   htmlFinal += "      <a href=\"https://tramasdelsur.com.ar\" class=\"btn-volver-pie\">\n        <svg viewBox=\"0 0 24 24\"><path d=\"M19 12H5M12 5l-7 7 7 7\"/></svg>\n        Volver al inicio\n      </a>\n    </footer>\n  </main>\n\n</body>\n</html>";
 
   return htmlFinal;
 }
 
-// Función para construir la estructura del JSON solicitada
 function construirJsonNota() {
   const titulo = document.getElementById('titulo').value;
   const slug = generarSlug(titulo);
+  const imagen = obtenerNombreImagen();
   
   const objetoJson = {
     "archivo":     slug + ".html",
@@ -450,7 +492,7 @@ function construirJsonNota() {
     "categoria":   document.getElementById('categoria').value,
     "autor":       document.getElementById('autor').value || "Tramas del Sur",
     "fecha":       document.getElementById('fecha').value,
-    "imagen":      document.getElementById('imagen').value || ""
+    "imagen":      imagen ? "./imagenes/" + imagen : ""
   };
 
   return JSON.stringify(objetoJson, null, 2);
@@ -463,7 +505,8 @@ document.getElementById('previewBtn').addEventListener('click', function() {
     return;
   }
   
-  const htmlContenido = construirHtmlNota();
+  // Pasamos 'true' porque es entorno de Vista Previa local/GitHub Pages
+  const htmlContenido = construirHtmlNota(true);
   const ventanaPreview = window.open('', '_blank');
   
   if (ventanaPreview) {
@@ -475,7 +518,7 @@ document.getElementById('previewBtn').addEventListener('click', function() {
   }
 });
 
-// Acción 2: Descarga del Pack (.zip conteniendo HTML + JSON)
+// Acción 2: Descarga del Pack (.zip conteniendo HTML + JSON + Imagen Adjunta opcional)
 document.getElementById('generatorForm').addEventListener('submit', function(e) {
   e.preventDefault();
 
@@ -484,11 +527,19 @@ document.getElementById('generatorForm').addEventListener('submit', function(e) 
 
   const zip = new JSZip();
 
-  const htmlFinal = construirHtmlNota();
+  // Pasamos 'false' porque es la nota de producción que irá a la raíz del sitio final
+  const htmlFinal = construirHtmlNota(false);
   const jsonFinal = construirJsonNota();
 
   zip.file(slug + ".html", htmlFinal);
   zip.file(slug + ".json", jsonFinal);
+
+  const fileInput = document.getElementById('imagenInput');
+  
+  if (fileInput.files && fileInput.files.length > 0) {
+    const file = fileInput.files[0];
+    zip.file("imagenes/" + file.name, file);
+  }
 
   zip.generateAsync({ type: "blob" }).then(function(content) {
     const url = URL.createObjectURL(content);
