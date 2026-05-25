@@ -344,7 +344,7 @@ function procesarTextoAHtml(texto) {
   let htmlResultado = "";
 
   bloques.forEach(bloque => {
-    bloque = bloque.trim();
+    bloque = block = bloque.trim();
     if (!bloque) return;
 
     if (bloque.indexOf('## ') === 0) {
@@ -397,13 +397,11 @@ function construirHtmlNota(esPreview = false) {
   const imagen = obtenerNombreImagen();
   const cuerpoHtml = procesarTextoAHtml(cuerpoRaw);
 
-  // Si es Preview, forzamos a que busque las imágenes subiendo un nivel relativo a /edicion/
-  // Si es producción, asume que la nota final vivirá en la raíz y busca en 'editorial/imagenes-notas/'
+  // Tanto para preview local en vivo como para producción definitiva, apuntamos a la subcarpeta imagenes-notas/
   const rutaImagenes = esPreview ? "../editorial/imagenes-notas/" : "../editorial/imagenes-notas/";
 
   let bloqueImagen = "";
   if (imagen.trim() !== "") {
-    // Si es preview y tenemos un objeto de archivo local subido, creamos un ObjectURL para mostrarlo inmediatamente sin que rompa por no existir en el servidor todavía
     let srcImagen = rutaImagenes + escapeHtml(imagen);
     if (esPreview) {
       const fileInput = document.getElementById('imagenInput');
@@ -480,7 +478,6 @@ function construirHtmlNota(esPreview = false) {
   return htmlFinal;
 }
 
-// (El resto de las funciones auxiliares e interceptores de eventos permanecen idénticos)
 function construirJsonNota() {
   const titulo = document.getElementById('titulo').value;
   const slug = generarSlug(titulo);
@@ -493,7 +490,7 @@ function construirJsonNota() {
     "categoria":   document.getElementById('categoria').value,
     "autor":       document.getElementById('autor').value || "Tramas del Sur",
     "fecha":       document.getElementById('fecha').value,
-    "imagen":      imagen ? "../imagenes/" + imagen : ""
+    "imagen":      imagen ? "../editorial/imagenes-notas/" + imagen : ""
   };
 
   return JSON.stringify(objetoJson, null, 2);
