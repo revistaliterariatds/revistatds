@@ -1,11 +1,14 @@
-[
-  {
-    "archivo": "nota-editorial.html",
-    "titulo": "Nota editorial",
-    "descripcion": "En palabras de Eduardo Galeano: “Quien escribe, teje. Texto proviene del latín, ‘textum’ que significa tejido. Con hilos de palabras vamos diciendo, con hilos de tiempo vamos viviendo. Los textos son como nosotros: tejidos que andan” ",
-    "categoria": "Editorial",
-    "autor": "Karina Villalba",
-    "fecha": "Abril 2026",
-    "imagen": ""
-  } // Para agregar una nueva nota se debe incluir la coma  " , "
-]
+{
+  "instrucciones": "Para agregar una nueva nota, inserte una coma al final del objeto previo.",
+  "articulos": [
+    {
+      "archivo": "nota-editorial.html",
+      "titulo": "Nota editorial",
+      "descripcion": "En palabras de Eduardo Galeano:...",
+      "categoria": "Editorial",
+      "autor": "Karina Villalba",
+      "fecha": "Abril 2026",
+      "imagen": ""
+    }
+  ]
+}
