@@ -348,7 +348,7 @@ function procesarTextoAHtml(texto) {
     if (!bloque) return;
 
     if (bloque.indexOf('## ') === 0) {
-      htmlResultado += "      <h2>" + block.substring(3) + "</h2>\n";
+      htmlResultado += "      <h2>" + bloque.substring(3) + "</h2>\n";
     } else if (bloque.indexOf('### ') === 0) {
       htmlResultado += "      <h3>" + bloque.substring(4) + "</h3>\n";
     } else if (bloque.indexOf('&gt; ') === 0) {
@@ -384,6 +384,7 @@ function obtenerNombreImagen() {
   return "";
 }
 
+// esPreview define si ajustamos las rutas para que se rendericen bien localmente en la pestaña del editor
 function construirHtmlNota(esPreview = false) {
   const categoria = document.getElementById('categoria').value;
   const titulo = document.getElementById('titulo').value;
@@ -396,14 +397,14 @@ function construirHtmlNota(esPreview = false) {
   const imagen = obtenerNombreImagen();
   const cuerpoHtml = procesarTextoAHtml(cuerpoRaw);
 
-  // Rutas fijas para los recursos del sitio
-  const rutaEstructura = "../imagenes/";
-  // Ruta para las imágenes propias de las notas
-  const rutaImagenesNotas = "../editorial/imagenes-notas/";
+  // Si es Preview, forzamos a que busque las imágenes subiendo un nivel relativo a /edicion/
+  // Si es producción, asume que la nota final vivirá en la raíz y busca en '../imagenes/'
+  const rutaImagenes = esPreview ? "../imagenes/" : "../imagenes/";
 
   let bloqueImagen = "";
   if (imagen.trim() !== "") {
-    let srcImagen = rutaImagenesNotas + escapeHtml(imagen);
+    // Si es preview y tenemos un objeto de archivo local subido, creamos un ObjectURL para mostrarlo inmediatamente sin que rompa por no existir en el servidor todavía
+    let srcImagen = rutaImagenes + escapeHtml(imagen);
     if (esPreview) {
       const fileInput = document.getElementById('imagenInput');
       if (fileInput.files && fileInput.files.length > 0) {
@@ -419,4 +420,137 @@ function construirHtmlNota(esPreview = false) {
   htmlFinal += "  <title>" + escapeHtml(titulo) + " — Tramas del Sur</title>\n\n";
   htmlFinal += "  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\" />\n";
   htmlFinal += "  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin />\n";
-  htmlFinal += "  <link href=\"https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,
+  htmlFinal += "  <link href=\"https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap\" rel=\"stylesheet\" />\n\n";
+  htmlFinal += "  <style>\n";
+  htmlFinal += "    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }\n";
+  htmlFinal += "    :root {\n      --ink:       #1e1a17;\n      --ink-soft:  #4a443e;\n      --ink-muted: #8a837a;\n      --orange:    #d95f1a;\n      --paper:     #f0ece3;\n      --rule:      #cec8bc;\n    }\n";
+  htmlFinal += "    html { scroll-behavior: smooth; }\n";
+  htmlFinal += "    body {\n      background-color: var(--paper);\n      background-image: url('" + rutaImagenes + "fondo.jpeg');\n      background-size: cover;\n      background-attachment: fixed;\n      color: var(--ink);\n      font-family: 'Lato', sans-serif;\n      font-weight: 300;\n      font-size: 17px;\n      line-height: 1.75;\n    }\n";
+  htmlFinal += "    body::before {\n      content: '';\n      position: fixed;\n      inset: 0;\n      background: rgba(240,236,227,0.78);\n      z-index: 0;\n      pointer-events: none;\n    }\n";
+  htmlFinal += "    nav {\n      position: fixed;\n      top: 0; left: 0; right: 0;\n      z-index: 100;\n      display: flex;\n      align-items: center;\n      justify-content: space-between;\n      padding: 0 3.5rem;\n      height: 60px;\n      background-image: url('" + rutaImagenes + "fondo.jpeg');\n      background-size: cover;\n      border-bottom: 1px solid var(--rule);\n    }\n";
+  htmlFinal += "    nav::before {\n      content: '';\n      position: absolute;\n      inset: 0;\n      background: rgba(240,236,227,0.88);\n      z-index: 0;\n    }\n";
+  htmlFinal += "    nav > * { position: relative; z-index: 1; }\n";
+  htmlFinal += "    .nav-logo img {\n      height: 36px;\n      width: auto;\n      display: block;\n      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);\n    }\n";
+  htmlFinal += "    .nav-logo img:hover { transform: scale(1.1); }\n";
+  htmlFinal += "    .btn-volver {\n      display: inline-flex;\n      align-items: center;\n      gap: 0.5rem;\n      font-size: 0.76rem;\n      letter-spacing: 0.12em;\n      text-transform: uppercase;\n      color: var(--ink-soft);\n      text-decoration: none;\n      transition: color 0.2s;\n    }\n";
+  htmlFinal += "    .btn-volver:hover { color: var(--orange); }\n";
+  htmlFinal += "    .btn-volver svg {\n      width: 14px; height: 14px;\n      stroke: currentColor; fill: none;\n      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;\n    }\n";
+  htmlFinal += "    main {\n      position: relative;\n      z-index: 1;\n      max-width: 760px;\n      margin: 0 auto;\n      padding: 7rem 2rem 6rem;\n    }\n";
+  htmlFinal += "    .article-header {\n      margin-bottom: 3rem;\n      padding-bottom: 2rem;\n      border-bottom: 1px solid var(--rule);\n    }\n";
+  htmlFinal += "    .article-categoria {\n      font-size: 0.7rem;\n      letter-spacing: 0.22em;\n      text-transform: uppercase;\n      color: var(--orange);\n      margin-bottom: 1rem;\n    }\n";
+  htmlFinal += "    .article-titulo {\n      font-family: 'Playfair Display', serif;\n      font-size: clamp(2rem, 5vw, 3.2rem);\n      font-weight: 400;\n      line-height: 1.15;\n      margin-bottom: 1.2rem;\n    }\n";
+  htmlFinal += "    .article-bajada {\n      font-family: 'Playfair Display', serif;\n      font-style: italic;\n      font-size: 1.15rem;\n      color: var(--ink-soft);\n      line-height: 1.65;\n      margin-bottom: 1.5rem;\n    }\n";
+  htmlFinal += "    .article-meta {\n      display: flex;\n      align-items: center;\n      gap: 1.5rem;\n      font-size: 0.78rem;\n      color: var(--ink-muted);\n      letter-spacing: 0.04em;\n    }\n";
+  htmlFinal += "    .article-meta span { display: flex; align-items: center; gap: 0.4rem; }\n";
+  htmlFinal += "    .article-cover {\n      width: 100%;\n      border-radius: 3px;\n      overflow: hidden;\n      margin-bottom: 2.5rem;\n    }\n";
+  htmlFinal += "    .article-cover img {\n      width: 100%;\n      height: auto;\n      display: block;\n    }\n";
+  htmlFinal += "    .article-body {\n      font-size: 1.05rem;\n      line-height: 1.85;\n      color: var(--ink);\n      text-align: justify;\n      text-justify: inter-word;\n    }\n";
+  htmlFinal += "    .article-body p { margin-bottom: 1.5rem; }\n";
+  htmlFinal += "    .article-body h2 {\n      font-family: 'Playfair Display', serif;\n      font-size: 1.5rem;\n      font-weight: 400;\n      margin: 2.5rem 0 1rem;\n      color: var(--ink);\n      text-align: left;\n    }\n";
+  htmlFinal += "    .article-body h3 {\n      font-family: 'Playfair Display', serif;\n      font-size: 1.15rem;\n      font-style: italic;\n      font-weight: 400;\n      margin: 2rem 0 0.8rem;\n      color: var(--ink-soft);\n      text-align: left;\n    }\n";
+  htmlFinal += "    .article-body blockquote {\n      border-left: 3px solid var(--orange);\n      padding: 0.5rem 0 0.5rem 1.8rem;\n      margin: 2rem 0;\n      font-family: 'Playfair Display', serif;\n      font-style: italic;\n      font-size: 1.2rem;\n      color: var(--ink-soft);\n      line-height: 1.6;\n      text-align: left;\n    }\n";
+  htmlFinal += "    .article-body hr {\n      border: none;\n      border-top: 1px solid var(--rule);\n      margin: 2.5rem 0;\n    }\n";
+  htmlFinal += "    .thread-divider {\n      display: flex;\n      align-items: center;\n      gap: 1rem;\n      margin: 2.5rem 0;\n    }\n";
+  htmlFinal += "    .thread-line { flex: 1; height: 1px; background: var(--rule); }\n";
+  htmlFinal += "    .article-footer {\n      margin-top: 4rem;\n      padding-top: 2rem;\n      border-top: 1px solid var(--rule);\n      display: flex;\n      align-items: center;\n      justify-content: space-between;\n      flex-wrap: wrap;\n      gap: 1rem;\n    }\n";
+  htmlFinal += "    .article-footer-logo img {\n      height: 28px;\n      opacity: 0.75;\n      transition: opacity 0.2s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);\n    }\n";
+  htmlFinal += "    .article-footer-logo img:hover { opacity: 1; transform: scale(1.08); }\n";
+  htmlFinal += "    .btn-volver-pie {\n      display: inline-flex;\n      align-items: center;\n      gap: 0.5rem;\n      padding: 0.7rem 1.6rem;\n      background: var(--ink);\n      color: #fff;\n      font-size: 0.75rem;\n      letter-spacing: 0.12em;\n      text-transform: uppercase;\n      text-decoration: none;\n      border-radius: 2px;\n      transition: background 0.2s;\n    }\n";
+  htmlFinal += "    .btn-volver-pie:hover { background: var(--orange); }\n";
+  htmlFinal += "    .btn-volver-pie svg {\n      width: 13px; height: 13px;\n      stroke: #fff; fill: none;\n      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;\n    }\n";
+  htmlFinal += "    @media (max-width: 700px) {\n      nav { padding: 0 1.5rem; }\n      main { padding: 6rem 1.2rem 4rem; }\n    }\n  </style>\n</head>\n<body>\n\n";
+  htmlFinal += "  <nav>\n    <a href=\"https://tramasdelsur.com.ar\" class=\"nav-logo\">\n      <img src=\"" + rutaImagenes + "logo.jpeg\" alt=\"Tramas del Sur\" />\n    </a>\n";
+  htmlFinal += "    <a href=\"https://tramasdelsur.com.ar\" class=\"btn-volver\">\n      <svg viewBox=\"0 0 24 24\"><path d=\"M19 12H5M12 5l-7 7 7 7\"/></svg>\n      Volver al inicio\n    </a>\n  </nav>\n\n";
+  htmlFinal += "  <main>\n    <header class=\"article-header\">\n";
+  htmlFinal += "      <p class=\"article-categoria\">" + escapeHtml(categoria) + "</p>\n";
+  htmlFinal += "      <h1 class=\"article-titulo\">" + escapeHtml(titulo) + "</h1>\n";
+  htmlFinal += "      <p class=\"article-bajada\">" + escapeHtml(bajada) + "</p>\n";
+  htmlFinal += "      <div class=\"article-meta\">\n";
+  htmlFinal += "        <span>Por " + escapeHtml(autor) + "</span>\n";
+  htmlFinal += "        <span>" + escapeHtml(fecha) + "</span>\n";
+  htmlFinal += "      </div>\n    </header>\n\n";
+  htmlFinal += bloqueImagen;
+  htmlFinal += "    <article class=\"article-body\">\n";
+  htmlFinal += cuerpoHtml;
+  htmlFinal += "    </article>\n\n";
+  htmlFinal += "    <footer class=\"article-footer\">\n";
+  htmlFinal += "      <a href=\"https://tramasdelsur.com.ar\" class=\"article-footer-logo\">\n        <img src=\"" + rutaImagenes + "logo.jpeg\" alt=\"Tramas del Sur\" />\n      </a>\n";
+  htmlFinal += "      <a href=\"https://tramasdelsur.com.ar\" class=\"btn-volver-pie\">\n        <svg viewBox=\"0 0 24 24\"><path d=\"M19 12H5M12 5l-7 7 7 7\"/></svg>\n        Volver al inicio\n      </a>\n    </footer>\n  </main>\n\n</body>\n</html>";
+
+  return htmlFinal;
+}
+
+// (El resto de las funciones auxiliares e interceptores de eventos permanecen idénticos)
+function construirJsonNota() {
+  const titulo = document.getElementById('titulo').value;
+  const slug = generarSlug(titulo);
+  const imagen = obtenerNombreImagen();
+  
+  const objetoJson = {
+    "archivo":     slug + ".html",
+    "titulo":      titulo,
+    "descripcion": document.getElementById('bajada').value,
+    "categoria":   document.getElementById('categoria').value,
+    "autor":       document.getElementById('autor').value || "Tramas del Sur",
+    "fecha":       document.getElementById('fecha').value,
+    "imagen":      imagen ? "../imagenes/" + imagen : ""
+  };
+
+  return JSON.stringify(objetoJson, null, 2);
+}
+
+document.getElementById('previewBtn').addEventListener('click', function() {
+  if (!document.getElementById('titulo').value || !document.getElementById('cuerpo').value) {
+    alert("Por favor, completa al menos el Título y el Cuerpo de la nota para ver la vista previa.");
+    return;
+  }
+  
+  const htmlContenido = construirHtmlNota(true);
+  const ventanaPreview = window.open('', '_blank');
+  
+  if (ventanaPreview) {
+    ventanaPreview.document.open();
+    ventanaPreview.document.write(htmlContenido);
+    ventanaPreview.document.close();
+  } else {
+    alert("El navegador bloqueó la ventana emergente. Por favor, permití los pop-ups para este sitio.");
+  }
+});
+
+document.getElementById('generatorForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const titulo = document.getElementById('titulo').value;
+  const slug = generarSlug(titulo);
+  const zip = new JSZip();
+
+  const htmlFinal = construirHtmlNota(false);
+  const jsonFinal = construirJsonNota();
+
+  zip.file(slug + ".html", htmlFinal);
+  zip.file(slug + ".json", jsonFinal);
+
+  const fileInput = document.getElementById('imagenInput');
+  
+  if (fileInput.files && fileInput.files.length > 0) {
+    const file = fileInput.files[0];
+    zip.file("imagenes/" + file.name, file);
+  }
+
+  zip.generateAsync({ type: "blob" }).then(function(content) {
+    const url = URL.createObjectURL(content);
+    const dummyAnchor = document.createElement('a');
+    dummyAnchor.href = url;
+    dummyAnchor.download = slug + ".zip";
+    
+    document.body.appendChild(dummyAnchor);
+    dummyAnchor.click();
+    document.body.removeChild(dummyAnchor);
+    URL.revokeObjectURL(url);
+  }).catch(function(err) {
+    alert("Hubo un error al empaquetar los archivos: " + err);
+  });
+});
+</script>
+</body>
+</html>
