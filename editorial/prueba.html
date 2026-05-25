@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>prueba — Tramas del Sur</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink:       #1e1a17;
+      --ink-soft:  #4a443e;
+      --ink-muted: #8a837a;
+      --orange:    #d95f1a;
+      --paper:     #f0ece3;
+      --rule:      #cec8bc;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--paper);
+      background-image: url('../editorial/imagenes-notas/fondo.jpeg');
+      background-size: cover;
+      background-attachment: fixed;
+      color: var(--ink);
+      font-family: 'Lato', sans-serif;
+      font-weight: 300;
+      font-size: 17px;
+      line-height: 1.75;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(240,236,227,0.78);
+      z-index: 0;
+      pointer-events: none;
+    }
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 3.5rem;
+      height: 60px;
+      background-image: url('../editorial/imagenes-notas/fondo.jpeg');
+      background-size: cover;
+      border-bottom: 1px solid var(--rule);
+    }
+    nav::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(240,236,227,0.88);
+      z-index: 0;
+    }
+    nav > * { position: relative; z-index: 1; }
+    .nav-logo img {
+      height: 36px;
+      width: auto;
+      display: block;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .nav-logo img:hover { transform: scale(1.1); }
+    .btn-volver {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.76rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .btn-volver:hover { color: var(--orange); }
+    .btn-volver svg {
+      width: 14px; height: 14px;
+      stroke: currentColor; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 7rem 2rem 6rem;
+    }
+    .article-header {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--rule);
+    }
+    .article-categoria {
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 1rem;
+    }
+    .article-titulo {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 400;
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+    }
+    .article-bajada {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--ink-soft);
+      line-height: 1.65;
+      margin-bottom: 1.5rem;
+    }
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-size: 0.78rem;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+    }
+    .article-meta span { display: flex; align-items: center; gap: 0.4rem; }
+    .article-cover {
+      width: 100%;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 2.5rem;
+    }
+    .article-cover img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .article-body {
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: var(--ink);
+      text-align: justify;
+      text-justify: inter-word;
+    }
+    .article-body p { margin-bottom: 1.5rem; }
+    .article-body h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin: 2.5rem 0 1rem;
+      color: var(--ink);
+      text-align: left;
+    }
+    .article-body h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-style: italic;
+      font-weight: 400;
+      margin: 2rem 0 0.8rem;
+      color: var(--ink-soft);
+      text-align: left;
+    }
+    .article-body blockquote {
+      border-left: 3px solid var(--orange);
+      padding: 0.5rem 0 0.5rem 1.8rem;
+      margin: 2rem 0;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.2rem;
+      color: var(--ink-soft);
+      line-height: 1.6;
+      text-align: left;
+    }
+    .article-body hr {
+      border: none;
+      border-top: 1px solid var(--rule);
+      margin: 2.5rem 0;
+    }
+    .thread-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 2.5rem 0;
+    }
+    .thread-line { flex: 1; height: 1px; background: var(--rule); }
+    .article-footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .article-footer-logo img {
+      height: 28px;
+      opacity: 0.75;
+      transition: opacity 0.2s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .article-footer-logo img:hover { opacity: 1; transform: scale(1.08); }
+    .btn-volver-pie {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.6rem;
+      background: var(--ink);
+      color: #fff;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: background 0.2s;
+    }
+    .btn-volver-pie:hover { background: var(--orange); }
+    .btn-volver-pie svg {
+      width: 13px; height: 13px;
+      stroke: #fff; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+    @media (max-width: 700px) {
+      nav { padding: 0 1.5rem; }
+      main { padding: 6rem 1.2rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="https://tramasdelsur.com.ar" class="nav-logo">
+      <img src="../editorial/imagenes-notas/logo.jpeg" alt="Tramas del Sur" />
+    </a>
+    <a href="https://tramasdelsur.com.ar" class="btn-volver">
+      <svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Volver al inicio
+    </a>
+  </nav>
+
+  <main>
+    <header class="article-header">
+      <p class="article-categoria">Editorial</p>
+      <h1 class="article-titulo">prueba</h1>
+      <p class="article-bajada">dasfasfa</p>
+      <div class="article-meta">
+        <span>Por Juan perez</span>
+        <span>20206</span>
+      </div>
+    </header>
+
+    <div class="article-cover">
+      <img src="../editorial/imagenes-notas/logo.jpeg" alt="" />
+    </div>
+    <article class="article-body">
+      <p>
+        sfasgasgsgaga
+      </p>
+    </article>
+
+    <footer class="article-footer">
+      <a href="https://tramasdelsur.com.ar" class="article-footer-logo">
+        <img src="../editorial/imagenes-notas/logo.jpeg" alt="Tramas del Sur" />
+      </a>
+      <a href="https://tramasdelsur.com.ar" class="btn-volver-pie">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Volver al inicio
+      </a>
+    </footer>
+  </main>
+
+</body>
+</html>
