@@ -150,18 +150,18 @@
           nombreArchivo: nombreArchivo
         };
 
+        // Dentro de reader.onloadend, donde se hace el fetch...
         try {
-          // Reemplazar con la URL de ejecución de tu aplicación web de Google Apps Script
-          const response = await fetch('https://script.google.com/macros/s/AKfycbxIVcmM7g9XNg8LUaeddLCA3waUyqYgvc7ORWg9bcymFXfvxSBb8p85mSqW8b1VnEvcwg/exec', {
+          const response = await fetch('https://script.google.com/macros/s/AKfycbyWGScMcjUkRi9UMspM-MkG_EMjii8gX29DqHWEQ0i3JR096N07lf1-ILFEBezWJVJteA/exec', {
             method: 'POST',
-            mode: 'no-cors',
+            mode: 'no-cors', 
             headers: {
-              'Content-Type': 'application/json'
+              // Eliminamos 'application/json' para evitar que el navegador envíe un pre-flight OPTIONS que Google Apps Script no soporta
+              'Content-Type': 'text/plain;charset=utf-8' 
             },
             body: JSON.stringify(payload)
           });
 
-          // Mensaje de éxito limpio sin mención a plataformas específicas
           alert('¡Colaboración enviada con éxito! El archivo ha sido procesado y los correos de confirmación están en camino.');
           document.getElementById('enviar-formulario').reset();
 
