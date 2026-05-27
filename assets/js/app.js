@@ -99,7 +99,7 @@ async function initDescargas() {
   for (let i = 1; i <= MAX_EDITIONS; i++) {
     const pdf = `assets/docs/rtds${i}.pdf`;
     if (await resourceExists(pdf)) {
-      const img    = `assets/img/content/rtds${i}.jpeg`;
+      const img    = `assets/docs/rtds${i}.jpeg`;
       const hasImg = await resourceExists(img);
       found.push({ num: i, pdf, img: hasImg ? img : null });
     }
