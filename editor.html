@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' https://cdnjs.cloudflare.com;
+    style-src 'self' https://fonts.googleapis.com;
+    font-src 'self' https://fonts.gstatic.com;
+    img-src 'self' data: blob:;
+    connect-src 'self';
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+  " />
+
+  <title>Generador de Notas — Tramas del Sur</title>
+
+  <!-- Preconnect para Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Estilos del editor -->
+  <link rel="stylesheet" href="assets/css/editor.css" />
+
+  <!-- JSZip (necesario para empaquetar el .zip) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
+</head>
+<body>
+
+  <!-- PANTALLA DE LOGIN -->
+  <div id="loginBox" role="main" aria-labelledby="login-heading">
+    <h2 id="login-heading">Control de Acceso</h2>
+    <p>Ingresá la contraseña para acceder al generador de notas.</p>
+
+    <label for="passwordField">Contraseña</label>
+    <input
+      type="password"
+      id="passwordField"
+      name="passwordField"
+      placeholder="Contraseña"
+      autocomplete="current-password"
+      aria-describedby="error-msg"
+    />
+
+    <button id="loginBtn" type="button">Ingresar</button>
+
+    <div id="error-msg" role="alert" aria-live="assertive">
+      Contraseña incorrecta. Reintente.
+    </div>
+  </div>
+
+  <!-- PANEL PRINCIPAL DEL GENERADOR -->
+  <div id="mainContainer" aria-label="Generador de Notas" hidden>
+
+    <div class="editor-header">
+      <img src="assets/img/logo/logo.jpeg" alt="Tramas del Sur" class="editor-logo" />
+      <h1>Generador de Notas</h1>
+    </div>
+
+    <div class="instrucciones" role="note" aria-label="Guía rápida de formato">
+      <strong>Guía rápida para el Cuerpo de la Nota:</strong><br />
+      Escribí normal. Separás los bloques con <strong>dos ENTER</strong> y usás estos prefijos:
+      <ul>
+        <li><code>## Subtítulo</code> para un subtítulo principal de sección.</li>
+        <li><code>### Subtítulo</code> para un subtítulo secundario (itálica).</li>
+        <li><code>&gt; Texto de la cita</code> para insertar una cita destacada con borde naranja.</li>
+        <li><code>---</code> (tres guiones) para una línea divisoria gris simple.</li>
+        <li><code>~~~</code> (tres virgulillas) para insertar el <strong>hilo decorativo naranja ondeado</strong>.</li>
+      </ul>
+    </div>
+
+    <form id="generatorForm" novalidate>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="categoria">Categoría</label>
+          <select id="categoria" name="categoria">
+            <option value="Editorial">Editorial</option>
+            <option value="Entrevista">Entrevista</option>
+            <option value="Ensayo">Ensayo</option>
+            <option value="Crónica">Crónica</option>
+            <option value="Reseña">Reseña</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="titulo">Título Principal</label>
+          <input
+            type="text"
+            id="titulo"
+            name="titulo"
+            required
+            placeholder="Ej: La persistencia de la memoria"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="bajada">Bajada / Copete</label>
+        <textarea
+          id="bajada"
+          name="bajada"
+          rows="2"
+          placeholder="Una oración que amplía el título y engancha al lector."
+        ></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="autor">Autor</label>
+          <input
+            type="text"
+            id="autor"
+            name="autor"
+            placeholder="Ej: Juan Pérez"
+          />
+        </div>
+        <div class="form-group">
+          <label for="fecha">Fecha de Publicación</label>
+          <input
+            type="text"
+            id="fecha"
+            name="fecha"
+            placeholder="Ej: Mayo 2026"
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="imagenInput">Imagen de Portada (Opcional)</label>
+          <input
+            type="file"
+            id="imagenInput"
+            name="imagenInput"
+            accept="image/*"
+          />
+        </div>
+        <div class="form-group">
+          <label for="img_alt">Descripción de la imagen (Accesibilidad)</label>
+          <input
+            type="text"
+            id="img_alt"
+            name="img_alt"
+            placeholder="Ej: Fotografía del puerto al amanecer"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="cuerpo">Cuerpo de la Nota</label>
+        <textarea
+          id="cuerpo"
+          name="cuerpo"
+          rows="15"
+          required
+          placeholder="Escribí acá el contenido de la nota..."
+        ></textarea>
+      </div>
+
+      <div class="form-actions">
+        <div class="action-block">
+          <button
+            type="button"
+            id="previewBtn"
+            class="btn-preview"
+            title="Generar una vista previa interactiva de la nota"
+          >
+            Vista Previa
+          </button>
+          <span class="action-desc">
+            Abre una pestaña nueva con el diseño final de la nota para revisión.
+          </span>
+        </div>
+
+        <div class="action-block">
+          <button
+            type="submit"
+            class="btn-submit"
+            title="Generar el paquete final para revisión y publicación"
+          >
+            Generar y Descargar Pack (.zip)
+          </button>
+          <span class="action-desc">
+            Genera el paquete de archivos estructurado listo para publicación.
+          </span>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- JavaScript del editor -->
+  <script src="assets/js/editor.js" defer></script>
+
+</body>
+</html>
