@@ -1,0 +1,289 @@
+/* ============================================================
+   Tramas del Sur — editor.css
+   Estilos exclusivos del Generador de Notas (editor.html)
+   ============================================================ */
+
+/* ─── RESET ─── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ─── BASE ─── */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f0ece3;
+  background-image: url('../img/content/fondo.jpeg');
+  background-size: cover;
+  background-attachment: fixed;
+  color: #1e1a17;
+  line-height: 1.5;
+  padding: 40px 20px;
+  min-height: 100vh;
+}
+
+/* Overlay para garantizar legibilidad */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: rgba(240, 236, 227, 0.85);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Contenedores por encima del overlay */
+#loginBox,
+#mainContainer {
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── LOGIN ─── */
+#loginBox {
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  max-width: 360px;
+  width: 100%;
+  margin: 100px auto 0;
+  border: 1px solid #cec8bc;
+}
+
+#loginBox h2 {
+  color: #1e1a17;
+  margin-top: 0;
+  font-size: 20px;
+  border-bottom: 2px solid #d95f1a;
+  padding-bottom: 8px;
+}
+
+#loginBox p {
+  font-size: 14px;
+  color: #666;
+  margin-top: 10px;
+}
+
+#loginBox input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin: 15px 0;
+  border: 1px solid #cec8bc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+#loginBox input[type="password"]:focus {
+  outline: none;
+  border-color: #d95f1a;
+}
+
+#loginBox button {
+  background: #d95f1a;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.2s;
+}
+
+#loginBox button:hover {
+  background: #b84d12;
+}
+
+#error-msg {
+  color: #c0392b;
+  font-size: 14px;
+  margin-top: 15px;
+  font-weight: bold;
+  background: #fce4e4;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #f9baba;
+  display: none;
+}
+
+/* ─── ENCABEZADO DEL PANEL ─── */
+.editor-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.editor-logo {
+  height: 65px;
+  width: auto;
+  display: block;
+  margin: 0 auto 15px;
+}
+
+/* ─── CONTENEDOR PRINCIPAL ─── */
+#mainContainer {
+  display: none;
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  border: 1px solid #cec8bc;
+}
+
+#mainContainer h1 {
+  margin-top: 0;
+  color: #1e1a17;
+  border-bottom: 2px solid #d95f1a;
+  padding-bottom: 12px;
+  font-size: 24px;
+  text-align: center;
+}
+
+/* ─── INSTRUCCIONES ─── */
+.instrucciones {
+  background: #fdf8f5;
+  border-left: 4px solid #d95f1a;
+  padding: 15px;
+  margin-bottom: 30px;
+  font-size: 14px;
+  color: #4a443e;
+}
+
+.instrucciones ul {
+  margin: 5px 0 0 20px;
+  padding: 0;
+}
+
+.instrucciones code {
+  background: #eaeaea;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: monospace;
+  color: #1e1a17;
+}
+
+/* ─── FORMULARIO ─── */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #4a443e;
+  font-size: 14px;
+}
+
+input[type="text"],
+input[type="file"],
+textarea,
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #cec8bc;
+  border-radius: 4px;
+  font-size: 15px;
+  background-color: #fafafa;
+}
+
+input[type="text"]:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #d95f1a;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(217, 95, 26, 0.1);
+}
+
+input[type="file"] {
+  background: #fafafa;
+  cursor: pointer;
+}
+
+textarea {
+  resize: vertical;
+  font-family: inherit;
+}
+
+/* ─── ACCIONES DEL FORMULARIO ─── */
+.form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.action-block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-submit {
+  background-color: #d95f1a;
+  color: #fff;
+  border: none;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+}
+
+.btn-submit:hover {
+  background-color: #b84d12;
+}
+
+.btn-preview {
+  background-color: #4a443e;
+  color: #fff;
+  border: none;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+}
+
+.btn-preview:hover {
+  background-color: #1e1a17;
+}
+
+.action-desc {
+  display: block;
+  font-size: 12px;
+  color: #726a5f;
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 700px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
