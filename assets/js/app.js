@@ -6,18 +6,6 @@
 'use strict';
 
 /* ─────────────────────────────────────────
-   Utilidad: verificar existencia de un recurso
-   ───────────────────────────────────────── */
-async function resourceExists(url) {
-  try {
-    const response = await fetch(url, { method: 'HEAD' });
-    return response.ok;
-  } catch {
-    return false;
-  }
-}
-
-/* ─────────────────────────────────────────
    Módulo: Notas Editoriales
    Carga `editorial/index.json` y renderiza
    tarjetas de notas en #notas-grid.
@@ -85,65 +73,71 @@ async function initNotasEditoriales() {
 
 /* ─────────────────────────────────────────
    Módulo: Descargas de Ediciones
-   Detecta PDFs disponibles en /assets/docs/
-   y renderiza tarjetas de descarga en #downloads-grid.
+   Lee assets/docs/index.json y renderiza
+   las tarjetas de descarga en #downloads-grid.
+
+   Para agregar una edición nueva:
+     1. Subí rtdsN.pdf y rtdsN.jpeg a assets/docs/
+     2. Agregá una entrada en assets/docs/index.json
    ───────────────────────────────────────── */
 async function initDescargas() {
-  const grid        = document.getElementById('downloads-grid');
-  const MAX_EDITIONS = 20;
-
+  const grid = document.getElementById('downloads-grid');
   if (!grid) return;
 
-  const found = [];
+  try {
+    const res = await fetch('assets/docs/index.json');
+    if (!res.ok) throw new Error('No se encontró el índice de ediciones.');
 
-  for (let i = 1; i <= MAX_EDITIONS; i++) {
-    const pdf = `assets/docs/rtds${i}.pdf`;
-    if (await resourceExists(pdf)) {
-      const img    = `assets/docs/rtds${i}.jpeg`;
-      const hasImg = await resourceExists(img);
-      found.push({ num: i, pdf, img: hasImg ? img : null });
+    const ediciones = await res.json();
+
+    grid.setAttribute('aria-busy', 'false');
+    grid.innerHTML = '';
+
+    if (!ediciones.length) {
+      grid.innerHTML = '<p class="downloads-empty">Próximamente disponible.</p>';
+      return;
     }
-  }
 
-  grid.setAttribute('aria-busy', 'false');
-  grid.innerHTML = '';
+    ediciones.forEach(({ num, titulo }) => {
+      const pdf  = `assets/docs/rtds${num}.pdf`;
+      const img  = `assets/docs/rtds${num}.jpeg`;
+      const label = titulo || `N° ${num}`;
 
-  if (found.length === 0) {
+      const card = document.createElement('div');
+      card.className = 'edition-card';
+      card.innerHTML = `
+        <div class="edition-cover">
+          <img
+            src="${img}"
+            alt="Portada ${label}"
+            loading="lazy"
+            onerror="this.parentElement.innerHTML='<div class=\\'edition-cover-placeholder\\' aria-hidden=\\'true\\'><span>N°${num}</span></div>'"
+          />
+        </div>
+        <div class="edition-info">
+          <span class="edition-label">Edición</span>
+          <span class="edition-num">${label}</span>
+          <a
+            href="${pdf}"
+            download
+            class="edition-btn"
+            aria-label="Descargar ${label} en PDF"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <path d="M12 3v12M7 14l5 5 5-5M4 20h16"/>
+            </svg>
+            Descargar
+          </a>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+  } catch {
+    grid.setAttribute('aria-busy', 'false');
     grid.innerHTML = '<p class="downloads-empty">Próximamente disponible.</p>';
-    return;
   }
-
-  found.forEach(({ num, pdf, img }) => {
-    const card = document.createElement('div');
-    card.className = 'edition-card';
-    card.innerHTML = `
-      <div class="edition-cover">
-        ${img
-          ? `<img src="${img}" alt="Portada Edición N° ${num}" loading="lazy" />`
-          : `<div class="edition-cover-placeholder" aria-hidden="true">
-               <span>N°${num}</span>
-             </div>`
-        }
-      </div>
-      <div class="edition-info">
-        <span class="edition-label">Edición</span>
-        <span class="edition-num">N° ${num}</span>
-        <a
-          href="${pdf}"
-          download
-          class="edition-btn"
-          aria-label="Descargar edición N° ${num} en PDF"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-            <path d="M12 3v12M7 14l5 5 5-5M4 20h16"/>
-          </svg>
-          Descargar
-        </a>
-      </div>
-    `;
-    grid.appendChild(card);
-  });
 }
 
 /* ─────────────────────────────────────────
