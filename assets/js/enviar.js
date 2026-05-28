@@ -10,7 +10,7 @@
    CONFIGURACIÓN
    Reemplazá esta URL por la de tu Apps Script desplegado
    ───────────────────────────────────────── */
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbws_hUOaC6Ii3U27oaseGNleYFFU7KoMbgom5fpEyMd6cjQvud0qRAX7SpPs2TTaCqP/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwAndE9gvuE-U-EBcZHMLE37AXaGkUewMm6Nc2ogF5AnA-eBdjeC031mHvc_O-CTftq/exec';
 
 /* ─────────────────────────────────────────
    Referencias al DOM
