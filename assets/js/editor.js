@@ -204,6 +204,10 @@ ${cuerpoHtml}    </article>
         </svg>
         Volver al inicio
       </a>
+      <div class="article-footer-qr">
+        <img src="${rutaAssets}img/logo/qr.png" alt="Código QR — tramasdelsur.com.ar" />
+        <span>tramasdelsur.com.ar</span>
+      </div>
     </footer>
   </main>
 
