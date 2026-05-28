@@ -569,6 +569,40 @@ footer {
   to { transform: rotate(360deg); }
 }
 
+/* Lista de archivos seleccionados */
+.file-name-display {
+  list-style: none;
+  margin-top: 0.5rem;
+  display: none;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.file-name-display.visible {
+  display: flex;
+}
+
+.file-name-display li {
+  font-size: 0.82rem;
+  color: var(--success);
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.file-name-display li::before {
+  content: '✓';
+  color: var(--success);
+  font-size: 0.75rem;
+}
+
+/* Campo condicional (pseudónimo / otro) con animación */
+#nombrePublicacionExtraGroup {
+  overflow: hidden;
+  animation: slideDown 0.3s cubic-bezier(0.34, 1.2, 0.64, 1) both;
+}
+
 /* ─── CAMPO ADULTO RESPONSABLE ─── */
 .form-group--adulto {
   overflow: hidden;

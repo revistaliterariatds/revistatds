@@ -253,10 +253,48 @@
             <span class="field-error" id="error-descripcion" role="alert"></span>
           </div>
 
-          <!-- ZONA DE CARGA DE ARCHIVO -->
+          <!-- NOMBRE EN PUBLICACIÓN -->
+          <div class="form-group">
+            <label for="nombrePublicacion">
+              ¿Cómo preferís que figure tu nombre en la publicación? <span class="required-mark" aria-hidden="true">*</span>
+            </label>
+            <select
+              id="nombrePublicacion"
+              name="nombrePublicacion"
+              aria-required="true"
+              aria-describedby="error-nombrePublicacion"
+            >
+              <option value="" disabled selected>Seleccioná una opción</option>
+              <option value="Nombre y Apellido">Nombre y Apellido</option>
+              <option value="Solo nombre">Solo nombre</option>
+              <option value="Nombre + inicial del apellido">Nombre + inicial del apellido</option>
+              <option value="Pseudónimo">Pseudónimo</option>
+              <option value="Otro">Otro</option>
+            </select>
+            <span class="field-error" id="error-nombrePublicacion" role="alert"></span>
+          </div>
+
+          <!-- CAMPO EXTRA: pseudónimo / otro (condicional) -->
+          <div class="form-group" id="nombrePublicacionExtraGroup" hidden>
+            <label for="nombrePublicacionExtra" id="nombrePublicacionExtraLabel">
+              Indicá tu pseudónimo <span class="required-mark" aria-hidden="true">*</span>
+            </label>
+            <input
+              type="text"
+              id="nombrePublicacionExtra"
+              name="nombrePublicacionExtra"
+              placeholder=""
+              aria-required="false"
+              aria-describedby="error-nombrePublicacionExtra"
+              disabled
+            />
+            <span class="field-error" id="error-nombrePublicacionExtra" role="alert"></span>
+          </div>
+
+          <!-- ZONA DE CARGA DE ARCHIVOS -->
           <div class="form-group">
             <label id="archivo-label">
-              Archivo del Cuento <span class="required-mark" aria-hidden="true">*</span>
+              Subí tus producciones <span class="required-mark" aria-hidden="true">*</span>
             </label>
             <div
               class="file-drop-zone"
@@ -270,7 +308,7 @@
                 type="file"
                 id="archivoInput"
                 name="archivoInput"
-                accept=".pdf,.doc,.docx,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
+                multiple
                 aria-hidden="true"
                 tabindex="-1"
               />
@@ -282,10 +320,10 @@
                 </svg>
               </div>
               <p class="file-drop-text">
-                <strong>Hacé clic o arrastrá tu archivo aquí</strong><br />
-                <span id="archivo-hint" class="file-drop-hint">PDF, DOC, DOCX o TXT · Máximo 10 MB</span>
+                <strong>Hacé clic o arrastrá tus archivos aquí</strong><br />
+                <span id="archivo-hint" class="file-drop-hint">Cualquier formato · Hasta 3 archivos · Máximo 10 MB por archivo</span>
               </p>
-              <p class="file-name-display" id="fileNameDisplay" aria-live="polite"></p>
+              <ul class="file-name-display" id="fileNameDisplay" aria-live="polite"></ul>
             </div>
             <span class="field-error" id="error-archivoInput" role="alert"></span>
           </div>
@@ -301,7 +339,7 @@
             aria-describedby="error-autoriza"
           />
           <label for="autoriza" class="check-label">
-            Autorizo a <strong>Tramas del Sur</strong> a recibir, almacenar y, en caso de ser seleccionado, publicar mi cuento en la revista, mencionando mi nombre como autor/a. Entiendo que mis datos personales serán utilizados únicamente a los fines de esta convocatoria.
+            Autorizo a <strong>Tramas del Sur</strong> a recibir, almacenar y, en caso de ser seleccionado, publicar mi cuento en la revista, mencionando mi nombre como autor/a. Entiendo que mis datos personales serán utilizados únicamente a los fines de esta convocatoria. Leí y acepto las <strong>Bases y Condiciones</strong> de publicación sobre las producciones enviadas.
             <span class="required-mark" aria-hidden="true"> *</span>
           </label>
         </div>
