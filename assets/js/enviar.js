@@ -59,37 +59,48 @@ function toggleAdulto() {
   }
 }
 
-edadSelect.addEventListener('change', toggleAdulto);
+if (edadSelect) {
+  edadSelect.addEventListener('change', toggleAdulto);
+}
 
 /* ─────────────────────────────────────────
    Módulo: Nombre en publicación (condicional)
    ───────────────────────────────────────── */
 function toggleNombreExtra() {
-  if (!nombrePublicacionExtraGroup) return;
+  if (!nombrePublicacionExtraGroup || !nombrePublicacionSelect) return;
   const val = nombrePublicacionSelect.value;
   const necesitaExtra = val === 'Pseudónimo' || val === 'Otro';
 
   if (necesitaExtra) {
-    nombrePublicacionExtraGroup.hidden = false;
-    nombrePublicacionExtra.disabled = false;
-    nombrePublicacionExtra.setAttribute('aria-required', 'true');
-    // Cambiar el label según la opción
-    nombrePublicacionExtraLabel.innerHTML = val === 'Pseudónimo'
-      ? 'Indicá tu pseudónimo <span class="required-mark" aria-hidden="true">*</span>'
-      : 'Indicá cómo querés figurar <span class="required-mark" aria-hidden="true">*</span>';
-    nombrePublicacionExtra.placeholder = val === 'Pseudónimo'
-      ? 'Ej: El Cuervo del Sur'
-      : 'Ej: Sólo mis iniciales';
+    nombrePublicacionExtraGroup.classList.add('visible');
+    if (nombrePublicacionExtra) {
+      nombrePublicacionExtra.disabled = false;
+      nombrePublicacionExtra.setAttribute('aria-required', 'true');
+    }
+    if (nombrePublicacionExtraLabel) {
+      nombrePublicacionExtraLabel.innerHTML = val === 'Pseudónimo'
+        ? 'Indicá tu pseudónimo <span class="required-mark" aria-hidden="true">*</span>'
+        : 'Indicá cómo querés figurar <span class="required-mark" aria-hidden="true">*</span>';
+    }
+    if (nombrePublicacionExtra) {
+      nombrePublicacionExtra.placeholder = val === 'Pseudónimo'
+        ? 'Ej: El Cuervo del Sur'
+        : 'Ej: Sólo mis iniciales';
+    }
   } else {
-    nombrePublicacionExtraGroup.hidden = true;
-    nombrePublicacionExtra.disabled = true;
-    nombrePublicacionExtra.setAttribute('aria-required', 'false');
-    nombrePublicacionExtra.value = '';
-    clearFieldError('nombrePublicacionExtra');
+    nombrePublicacionExtraGroup.classList.remove('visible');
+    if (nombrePublicacionExtra) {
+      nombrePublicacionExtra.disabled = true;
+      nombrePublicacionExtra.setAttribute('aria-required', 'false');
+      nombrePublicacionExtra.value = '';
+      clearFieldError('nombrePublicacionExtra');
+    }
   }
 }
 
-nombrePublicacionSelect.addEventListener('change', toggleNombreExtra);
+if (nombrePublicacionSelect) {
+  nombrePublicacionSelect.addEventListener('change', toggleNombreExtra);
+}
 
 /* ─────────────────────────────────────────
    Utilidades de validación
@@ -344,8 +355,8 @@ form.addEventListener('submit', async function (e) {
       form.reset();
       archivosSeleccionados = [];
       actualizarDropZone();
-      toggleAdulto();
-      toggleNombreExtra();
+      if (edadSelect) { edadSelect.value = ''; toggleAdulto(); }
+      if (nombrePublicacionSelect) { nombrePublicacionSelect.value = ''; toggleNombreExtra(); }
     } else {
       throw new Error(result.message || 'Error desconocido en el servidor.');
     }
