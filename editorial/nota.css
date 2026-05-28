@@ -276,8 +276,8 @@ main {
 }
 
 .article-footer-qr img {
-  height: 48px;
-  width: 48px;
+  height: 28px;
+  width: 28px;
   object-fit: contain;
   border-radius: 3px;
   display: block;

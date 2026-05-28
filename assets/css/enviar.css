@@ -541,8 +541,8 @@ footer {
 }
 
 .footer-qr img {
-  height: 52px;
-  width: 52px;
+  height: 28px;
+  width: 28px;
   object-fit: contain;
   display: block;
   border-radius: 3px;
