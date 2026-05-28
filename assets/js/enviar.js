@@ -1,14 +1,12 @@
 /**
  * Tramas del Sur — enviar.js
  * Formulario de envío de cuentos
- * Valida campos, sube el archivo y datos al Google Apps Script endpoint.
  */
 
 'use strict';
 
 /* ─────────────────────────────────────────
    CONFIGURACIÓN
-   Reemplazá esta URL por la de tu Apps Script desplegado
    ───────────────────────────────────────── */
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxrtnJxyACja92K16fqYsd_8nv7MLfvKcXtywmdUV-fXcCU7HLYbumYI6_BRk4c_9sQ/exec';
 
@@ -21,179 +19,34 @@ const dropZone    = document.getElementById('dropZone');
 const fileDisplay = document.getElementById('fileNameDisplay');
 const btnEnviar   = document.getElementById('btnEnviar');
 const formAlert   = document.getElementById('formAlert');
-
-/* ─────────────────────────────────────────
-   Drag & Drop sobre la zona de archivo
-   ───────────────────────────────────────── */
-['dragenter', 'dragover'].forEach(evt => {
-  dropZone.addEventListener(evt, e => {
-    e.preventDefault();
-    dropZone.classList.add('drag-over');
-  });
-});
-
-['dragleave', 'drop'].forEach(evt => {
-  dropZone.addEventListener(evt, e => {
-    e.preventDefault();
-    dropZone.classList.remove('drag-over');
-  });
-});
-
-dropZone.addEventListener('drop', e => {
-  const dt    = e.dataTransfer;
-  const files = dt.files;
-  if (files.length > 0) {
-    // Asignamos al input nativo para que el resto del flujo funcione igual
-    const dataTransfer = new DataTransfer();
-    dataTransfer.items.add(files[0]);
-    fileInput.files = dataTransfer.files;
-    actualizarDropZone(files[0]);
-  }
-});
-
-fileInput.addEventListener('change', () => {
-  if (fileInput.files.length > 0) {
-    actualizarDropZone(fileInput.files[0]);
-  }
-});
-
-function actualizarDropZone(file) {
-  fileDisplay.textContent = `✓ ${file.name}`;
-  dropZone.classList.add('has-file');
-  dropZone.classList.remove('invalid');
-  clearFieldError('archivoInput');
-}
-
-/* ─────────────────────────────────────────
-   Validación
-   ───────────────────────────────────────── */
-const TIPOS_VALIDOS = [
-  'application/pdf',
-  'application/msword',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  'text/plain'
-];
-const EXTENSIONES_VALIDAS = /\.(pdf|doc|docx|txt)$/i;
-const MAX_MB = 10;
-
-function mostrarFieldError(id, mensaje) {
-  const errorEl = document.getElementById(`error-${id}`);
-  const inputEl = document.getElementById(id) || dropZone;
-  if (errorEl) {
-    errorEl.textContent = mensaje;
-    errorEl.classList.add('visible');
-  }
-  inputEl.classList.add('invalid');
-}
-
-function clearFieldError(id) {
-  const errorEl = document.getElementById(`error-${id}`);
-  const inputEl = document.getElementById(id) || dropZone;
-  if (errorEl) errorEl.classList.remove('visible');
-  if (inputEl) inputEl.classList.remove('invalid');
-}
-
-function validarFormulario() {
-  let valido = true;
-
-  // Campos de texto / select obligatorios
-  const campos = ['nombre', 'edad', 'email', 'genero', 'escuela', 'titulo', 'descripcion'];
-  campos.forEach(id => {
-    clearFieldError(id);
-    const el = document.getElementById(id);
-    if (!el.value.trim()) {
-      mostrarFieldError(id, 'Este campo es obligatorio.');
-      valido = false;
-    }
-  });
-
-  // Email con formato válido
-  const emailEl = document.getElementById('email');
-  if (emailEl.value.trim()) {
-    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-    if (!emailRe.test(emailEl.value.trim())) {
-      mostrarFieldError('email', 'Ingresá un correo electrónico válido.');
-      valido = false;
-    }
-  }
-
-  // Campos adulto responsable (solo si es menor)
-  if (esMenor()) {
-    ['adultoNombre', 'adultoEmail', 'adultoTel'].forEach(id => {
-      clearFieldError(id);
-      const el = document.getElementById(id);
-      if (!el.value.trim()) {
-        mostrarFieldError(id, 'Este campo es obligatorio para menores de 18 años.');
-        valido = false;
-      }
-    });
-
-    const adultoEmailEl = document.getElementById('adultoEmail');
-    if (adultoEmailEl.value.trim()) {
-      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-      if (!emailRe.test(adultoEmailEl.value.trim())) {
-        mostrarFieldError('adultoEmail', 'Ingresá un correo electrónico válido.');
-        valido = false;
-      }
-    }
-  }
-
-  // Checkbox de autorización
-  clearFieldError('autoriza');
-  const autoriza = document.getElementById('autoriza');
-  if (!autoriza.checked) {
-    mostrarFieldError('autoriza', 'Debés autorizar el uso de tus datos para continuar.');
-    valido = false;
-  }
-
-  // Archivo
-  clearFieldError('archivoInput');
-  if (!fileInput.files || fileInput.files.length === 0) {
-    mostrarFieldError('archivoInput', 'Adjuntá el archivo de tu cuento.');
-    dropZone.classList.add('invalid');
-    valido = false;
-  } else {
-    const file = fileInput.files[0];
-    const esValido = TIPOS_VALIDOS.includes(file.type) || EXTENSIONES_VALIDAS.test(file.name);
-    if (!esValido) {
-      mostrarFieldError('archivoInput', 'El archivo debe ser PDF, DOC, DOCX o TXT.');
-      dropZone.classList.add('invalid');
-      valido = false;
-    } else if (file.size > MAX_MB * 1024 * 1024) {
-      mostrarFieldError('archivoInput', `El archivo no puede superar los ${MAX_MB} MB.`);
-      dropZone.classList.add('invalid');
-      valido = false;
-    }
-  }
-
-  return valido;
-}
-
-/* ─────────────────────────────────────────
-   Módulo: Adulto Responsable (menores de 18)
-   ───────────────────────────────────────── */
-const edadSelect   = document.getElementById('edad');
-const adultoGroup  = document.getElementById('adultoGroup');
+const edadSelect  = document.getElementById('edad');
+const adultoGroup = document.getElementById('adultoGroup');
 const adultoNombre = document.getElementById('adultoNombre');
 const adultoEmail  = document.getElementById('adultoEmail');
 const adultoTel    = document.getElementById('adultoTel');
 
+/* ─────────────────────────────────────────
+   Módulo: Adulto Responsable
+   Debe declararse antes de validarFormulario
+   ───────────────────────────────────────── */
 function esMenor() {
   return edadSelect.value === '13 a 17';
 }
 
 function toggleAdulto() {
-  const mostrar = esMenor();
+  if (!adultoGroup) return;
 
-  if (mostrar) {
+  if (esMenor()) {
     adultoGroup.hidden = false;
     [adultoNombre, adultoEmail, adultoTel].forEach(el => {
+      if (!el) return;
       el.disabled = false;
       el.setAttribute('aria-required', 'true');
     });
   } else {
     adultoGroup.hidden = true;
     [adultoNombre, adultoEmail, adultoTel].forEach(el => {
+      if (!el) return;
       el.disabled = true;
       el.setAttribute('aria-required', 'false');
       el.value = '';
@@ -205,14 +58,145 @@ function toggleAdulto() {
 edadSelect.addEventListener('change', toggleAdulto);
 
 /* ─────────────────────────────────────────
-   Limpiar errores al editar cada campo
+   Utilidades de validación
+   ───────────────────────────────────────── */
+function mostrarFieldError(id, mensaje) {
+  const errorEl = document.getElementById(`error-${id}`);
+  const inputEl = id === 'archivoInput' ? dropZone : document.getElementById(id);
+  if (errorEl) {
+    errorEl.textContent = mensaje;
+    errorEl.classList.add('visible');
+  }
+  if (inputEl) inputEl.classList.add('invalid');
+}
+
+function clearFieldError(id) {
+  const errorEl = document.getElementById(`error-${id}`);
+  const inputEl = id === 'archivoInput' ? dropZone : document.getElementById(id);
+  if (errorEl) errorEl.classList.remove('visible');
+  if (inputEl) inputEl.classList.remove('invalid');
+}
+
+/* ─────────────────────────────────────────
+   Validación del formulario
+   ───────────────────────────────────────── */
+const TIPOS_VALIDOS = [
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'text/plain'
+];
+const EXTENSIONES_VALIDAS = /\.(pdf|doc|docx|txt)$/i;
+const MAX_MB = 10;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+function validarFormulario() {
+  let valido = true;
+
+  // Campos obligatorios base
+  ['nombre', 'edad', 'email', 'genero', 'escuela', 'titulo', 'descripcion'].forEach(id => {
+    clearFieldError(id);
+    const el = document.getElementById(id);
+    if (!el.value.trim()) {
+      mostrarFieldError(id, 'Este campo es obligatorio.');
+      valido = false;
+    }
+  });
+
+  // Email del autor
+  const emailEl = document.getElementById('email');
+  if (emailEl.value.trim() && !EMAIL_RE.test(emailEl.value.trim())) {
+    mostrarFieldError('email', 'Ingresá un correo electrónico válido.');
+    valido = false;
+  }
+
+  // Campos adulto responsable (solo si es menor)
+  if (esMenor()) {
+    ['adultoNombre', 'adultoEmail', 'adultoTel'].forEach(id => {
+      clearFieldError(id);
+      const el = document.getElementById(id);
+      if (!el || !el.value.trim()) {
+        mostrarFieldError(id, 'Este campo es obligatorio para menores de 18 años.');
+        valido = false;
+      }
+    });
+
+    if (adultoEmail && adultoEmail.value.trim() && !EMAIL_RE.test(adultoEmail.value.trim())) {
+      mostrarFieldError('adultoEmail', 'Ingresá un correo electrónico válido.');
+      valido = false;
+    }
+  }
+
+  // Autorización
+  clearFieldError('autoriza');
+  if (!document.getElementById('autoriza').checked) {
+    mostrarFieldError('autoriza', 'Debés autorizar el uso de tus datos para continuar.');
+    valido = false;
+  }
+
+  // Archivo
+  clearFieldError('archivoInput');
+  if (!fileInput.files || fileInput.files.length === 0) {
+    mostrarFieldError('archivoInput', 'Adjuntá el archivo de tu cuento.');
+    valido = false;
+  } else {
+    const file = fileInput.files[0];
+    const esValido = TIPOS_VALIDOS.includes(file.type) || EXTENSIONES_VALIDAS.test(file.name);
+    if (!esValido) {
+      mostrarFieldError('archivoInput', 'El archivo debe ser PDF, DOC, DOCX o TXT.');
+      valido = false;
+    } else if (file.size > MAX_MB * 1024 * 1024) {
+      mostrarFieldError('archivoInput', `El archivo no puede superar los ${MAX_MB} MB.`);
+      valido = false;
+    }
+  }
+
+  return valido;
+}
+
+/* ─────────────────────────────────────────
+   Limpiar errores al editar — solo campos que existen
    ───────────────────────────────────────── */
 ['nombre', 'edad', 'email', 'genero', 'escuela', 'titulo', 'descripcion', 'adultoNombre', 'adultoEmail', 'adultoTel'].forEach(id => {
-  document.getElementById(id).addEventListener('input', () => clearFieldError(id));
-  document.getElementById(id).addEventListener('change', () => clearFieldError(id));
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input',  () => clearFieldError(id));
+  el.addEventListener('change', () => clearFieldError(id));
 });
 
 document.getElementById('autoriza').addEventListener('change', () => clearFieldError('autoriza'));
+
+/* ─────────────────────────────────────────
+   Drag & Drop
+   ───────────────────────────────────────── */
+['dragenter', 'dragover'].forEach(evt => {
+  dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+});
+
+['dragleave', 'drop'].forEach(evt => {
+  dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.remove('drag-over'); });
+});
+
+dropZone.addEventListener('drop', e => {
+  const files = e.dataTransfer.files;
+  if (files.length > 0) {
+    const dt = new DataTransfer();
+    dt.items.add(files[0]);
+    fileInput.files = dt.files;
+    actualizarDropZone(files[0]);
+  }
+});
+
+fileInput.addEventListener('change', () => {
+  if (fileInput.files.length > 0) actualizarDropZone(fileInput.files[0]);
+});
+
+function actualizarDropZone(file) {
+  fileDisplay.textContent = `✓ ${file.name}`;
+  dropZone.classList.add('has-file');
+  dropZone.classList.remove('invalid');
+  clearFieldError('archivoInput');
+}
 
 /* ─────────────────────────────────────────
    UI: estado del botón
@@ -249,7 +233,7 @@ form.addEventListener('submit', async function (e) {
 
     const payload = {
       nombre:      document.getElementById('nombre').value.trim(),
-      edad:        document.getElementById('edad').value,
+      edad:        edadSelect.value,
       email:       document.getElementById('email').value.trim(),
       genero:      document.getElementById('genero').value,
       escuela:     document.getElementById('escuela').value.trim(),
@@ -267,7 +251,7 @@ form.addEventListener('submit', async function (e) {
 
     const response = await fetch(APPS_SCRIPT_URL, {
       method:  'POST',
-      headers: { 'Content-Type': 'text/plain' }, // evita preflight CORS con Apps Script
+      headers: { 'Content-Type': 'text/plain' },
       body:    JSON.stringify(payload),
     });
 
@@ -281,6 +265,7 @@ form.addEventListener('submit', async function (e) {
       form.reset();
       dropZone.classList.remove('has-file');
       fileDisplay.textContent = '';
+      toggleAdulto(); // ocultar campos adulto si quedaron visibles
     } else {
       throw new Error(result.message || 'Error desconocido en el servidor.');
     }
