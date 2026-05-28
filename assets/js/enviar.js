@@ -10,7 +10,7 @@
    CONFIGURACIÓN
    Reemplazá esta URL por la de tu Apps Script desplegado
    ───────────────────────────────────────── */
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwAndE9gvuE-U-EBcZHMLE37AXaGkUewMm6Nc2ogF5AnA-eBdjeC031mHvc_O-CTftq/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxrtnJxyACja92K16fqYsd_8nv7MLfvKcXtywmdUV-fXcCU7HLYbumYI6_BRk4c_9sQ/exec';
 
 /* ─────────────────────────────────────────
    Referencias al DOM
@@ -117,6 +117,27 @@ function validarFormulario() {
     }
   }
 
+  // Campos adulto responsable (solo si es menor)
+  if (esMenor()) {
+    ['adultoNombre', 'adultoEmail', 'adultoTel'].forEach(id => {
+      clearFieldError(id);
+      const el = document.getElementById(id);
+      if (!el.value.trim()) {
+        mostrarFieldError(id, 'Este campo es obligatorio para menores de 18 años.');
+        valido = false;
+      }
+    });
+
+    const adultoEmailEl = document.getElementById('adultoEmail');
+    if (adultoEmailEl.value.trim()) {
+      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      if (!emailRe.test(adultoEmailEl.value.trim())) {
+        mostrarFieldError('adultoEmail', 'Ingresá un correo electrónico válido.');
+        valido = false;
+      }
+    }
+  }
+
   // Checkbox de autorización
   clearFieldError('autoriza');
   const autoriza = document.getElementById('autoriza');
@@ -149,9 +170,44 @@ function validarFormulario() {
 }
 
 /* ─────────────────────────────────────────
+   Módulo: Adulto Responsable (menores de 18)
+   ───────────────────────────────────────── */
+const edadSelect   = document.getElementById('edad');
+const adultoGroup  = document.getElementById('adultoGroup');
+const adultoNombre = document.getElementById('adultoNombre');
+const adultoEmail  = document.getElementById('adultoEmail');
+const adultoTel    = document.getElementById('adultoTel');
+
+function esMenor() {
+  return edadSelect.value === '13 a 17';
+}
+
+function toggleAdulto() {
+  const mostrar = esMenor();
+
+  if (mostrar) {
+    adultoGroup.hidden = false;
+    [adultoNombre, adultoEmail, adultoTel].forEach(el => {
+      el.disabled = false;
+      el.setAttribute('aria-required', 'true');
+    });
+  } else {
+    adultoGroup.hidden = true;
+    [adultoNombre, adultoEmail, adultoTel].forEach(el => {
+      el.disabled = true;
+      el.setAttribute('aria-required', 'false');
+      el.value = '';
+      clearFieldError(el.id);
+    });
+  }
+}
+
+edadSelect.addEventListener('change', toggleAdulto);
+
+/* ─────────────────────────────────────────
    Limpiar errores al editar cada campo
    ───────────────────────────────────────── */
-['nombre', 'edad', 'email', 'genero', 'escuela', 'titulo', 'descripcion'].forEach(id => {
+['nombre', 'edad', 'email', 'genero', 'escuela', 'titulo', 'descripcion', 'adultoNombre', 'adultoEmail', 'adultoTel'].forEach(id => {
   document.getElementById(id).addEventListener('input', () => clearFieldError(id));
   document.getElementById(id).addEventListener('change', () => clearFieldError(id));
 });
@@ -202,6 +258,11 @@ form.addEventListener('submit', async function (e) {
       fileName:    file.name,
       fileData:    base64File,
       mimeType:    file.type || 'application/octet-stream',
+      ...(esMenor() && {
+        adultoNombre: adultoNombre.value.trim(),
+        adultoEmail:  adultoEmail.value.trim(),
+        adultoTel:    adultoTel.value.trim(),
+      }),
     };
 
     const response = await fetch(APPS_SCRIPT_URL, {

@@ -569,6 +569,55 @@ footer {
   to { transform: rotate(360deg); }
 }
 
+/* ─── CAMPO ADULTO RESPONSABLE ─── */
+.form-group--adulto {
+  overflow: hidden;
+  animation: slideDown 0.35s cubic-bezier(0.34, 1.2, 0.64, 1) both;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.adulto-card {
+  background: #fdf8f5;
+  border: 1px solid #d95f1a;
+  border-left: 4px solid #d95f1a;
+  border-radius: 4px;
+  padding: 1.4rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.adulto-titulo {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  color: #4a443e;
+  line-height: 1.55;
+  margin-bottom: 0.8rem;
+  font-style: italic;
+}
+
+.adulto-titulo svg {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  margin-top: 1px;
+  stroke: #d95f1a;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.adulto-card label {
+  margin-top: 0;
+}
+
 /* ─── RESPONSIVE ─── */
 @media (max-width: 640px) {
   nav { padding: 0 1.2rem; }
