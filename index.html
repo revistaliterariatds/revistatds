@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Tramas del Sur — Revista independiente de arte y cultura del sur." />
 
-  <!-- Content Security Policy -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
     script-src 'self';
@@ -20,31 +19,28 @@
 
   <title>Tramas del Sur — Revista N°1</title>
 
-  <!-- Preconnect para Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
 
-  <!-- Google Fonts -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap"
-    rel="stylesheet"
-  />
-
-  <!-- Estilos externos -->
   <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
 
+  <!-- NAV -->
   <nav aria-label="Navegación principal">
-    <a href="#" class="nav-logo" aria-label="Tramas del Sur — Inicio">
-      <img src="assets/img/logo/logo.jpeg" alt="Tramas del Sur" />
-    </a>
-    <ul class="nav-links" role="list">
-      <li><a href="#sobre">La revista</a></li>
-      <li><a href="#notas">Notas</a></li>
-      <li><a href="#descargas">Descargar PDF</a></li>
-      <li><a href="#redes">Redes</a></li>
-    </ul>
+    <div class="nav-inner">
+      <a href="#" class="nav-logo" aria-label="Tramas del Sur — Inicio">
+        <img src="assets/img/logo/logo.jpeg" alt="Tramas del Sur" />
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="#sobre">La revista</a></li>
+        <li><a href="#notas">Notas</a></li>
+        <li><a href="#descargas">Descargar PDF</a></li>
+        <li><a href="#redes">Redes</a></li>
+        <li><a href="enviar.html">Enviá tu cuento</a></li>
+      </ul>
+    </div>
   </nav>
 
   <main>
@@ -63,7 +59,7 @@
           </svg>
           Ver ediciones
         </a>
-        <a href="#indice" class="btn-ghost">Ver índice ↓</a>
+        <a href="#notas" class="btn-ghost">Ver índice ↓</a>
       </div>
     </section>
 
@@ -79,104 +75,154 @@
 
     <!-- SOBRE -->
     <section class="about" id="sobre" aria-labelledby="sobre-heading">
-      <div class="about-side">
-        <p class="section-label" id="sobre-heading">Sobre la revista</p>
-        <div class="about-logo">
-          <img src="assets/img/logo/logo.jpeg" alt="Tramas del Sur" />
+      <div class="inner">
+        <div class="about-side">
+          <p class="section-label" id="sobre-heading">Sobre la revista</p>
+          <div class="about-logo">
+            <img src="assets/img/logo/logo.jpeg" alt="Tramas del Sur" />
+          </div>
+        </div>
+        <div>
+          <p class="about-text">
+            <em>Tramas del Sur</em> es una revista literaria independiente nacida del deseo de dar lugar a las voces, los relatos y las formas de hacer cultura que crecen al sur del mapa.
+          </p>
+          <p class="about-body">
+            Creemos en la literatura como espacio de encuentro y en la cultura como tejido colectivo. Cada número reúne historias, miradas y escrituras distintas que se cruzan, dialogan y construyen algo nuevo.
+          </p>
+          <p class="about-body">
+            Una publicación hecha con tiempo y cuidado, para quienes todavía creen en el poder de las palabras.
+          </p>
         </div>
       </div>
-      <div>
-        <p class="about-text">
-          <em>Tramas del Sur</em> es una revista literaria independiente nacida del deseo de dar lugar a las voces, los relatos y las formas de hacer cultura que crecen al sur del mapa.
-        </p>
-        <p class="about-body">
-          Creemos en la literatura como espacio de encuentro y en la cultura como tejido colectivo. Cada número reúne historias, miradas y escrituras distintas que se cruzan, dialogan y construyen algo nuevo.
-        </p>
-        <p class="about-body">
-          Una publicación hecha con tiempo y cuidado, para quienes todavía creen en el poder de las palabras.
-        </p>
-      </div>
     </section>
 
-    <!-- 1. NOTAS EDITORIALES -->
+    <!-- HILO -->
+    <div class="thread-divider" aria-hidden="true">
+      <div class="thread-line"></div>
+      <svg class="thread-wave" width="120" height="24" viewBox="0 0 120 24" fill="none">
+        <path d="M2 12 C12 4, 22 20, 32 12 S52 4, 62 12 S82 20, 92 12 S108 6, 118 12" stroke="#d95f1a" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <path d="M118 12 Q122 10, 124 8 Q126 10, 124 14 Q122 14, 118 12Z" fill="#d95f1a"/>
+      </svg>
+      <div class="thread-line"></div>
+    </div>
+
+    <!-- NOTAS EDITORIALES -->
     <section id="notas" aria-labelledby="notas-heading">
-      <div class="index-header">
-        <h2 class="index-h" id="notas-heading">Notas Editoriales</h2>
-        <span class="index-num" id="notas-count" aria-live="polite"></span>
-      </div>
-      <div class="notas-grid" id="notas-grid" aria-live="polite" aria-busy="true">
-        <p class="downloads-loading">Cargando notas…</p>
+      <div class="inner">
+        <div class="index-header">
+          <h2 class="index-h" id="notas-heading">Notas Editoriales</h2>
+          <span class="index-num" id="notas-count" aria-live="polite"></span>
+        </div>
+        <div class="notas-grid" id="notas-grid" aria-live="polite" aria-busy="true">
+          <p class="downloads-loading">Cargando notas…</p>
+        </div>
       </div>
     </section>
 
-    <!-- 2. DESCARGAS -->
+    <!-- DESCARGAS -->
     <div class="cta-band" id="descargas" aria-labelledby="descargas-heading">
-      <div class="cta-inner">
-        <p class="section-label" id="descargas-heading">Publicaciones</p>
-        <p class="cta-text">Descargá nuestras ediciones <em>de forma gratuita.</em></p>
-        <div class="downloads-grid" id="downloads-grid" aria-live="polite" aria-busy="true">
-          <div class="downloads-loading">Buscando ediciones…</div>
+      <div class="inner">
+        <div class="cta-inner">
+          <p class="section-label" id="descargas-heading">Publicaciones</p>
+          <p class="cta-text">Descargá nuestras ediciones <em>de forma gratuita.</em></p>
+          <div class="downloads-grid" id="downloads-grid" aria-live="polite" aria-busy="true">
+            <div class="downloads-loading">Buscando ediciones…</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- 3. REDES -->
-    <section class="redes" id="redes" aria-labelledby="redes-heading">
-      <p class="section-label">Seguinos</p>
-      <h2 class="redes-titulo" id="redes-heading">Nuestras Redes</h2>
-      <div class="redes-grid">
-        <a
-          href="https://www.facebook.com/revistatramasdelsur"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="red-card"
-          aria-label="Visitar Tramas del Sur en Facebook (abre en nueva pestaña)"
-        >
-          <div class="red-icon" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
-            </svg>
+    <!-- ENVIÁ TU CUENTO -->
+    <section class="envio-band" id="envio" aria-labelledby="envio-heading">
+      <div class="inner">
+        <div class="envio-inner">
+          <div>
+            <span class="envio-label">Convocatoria abierta</span>
+            <h2 class="envio-titulo" id="envio-heading">¿Escribís?<br />Envianos tu cuento.</h2>
+            <p class="envio-texto">
+              Leemos cada texto con atención. Si querés ser parte de la próxima edición de Tramas del Sur, mandanos tu cuento y te respondemos.
+            </p>
+            <a href="enviar.html" class="envio-btn">
+              Enviar mi cuento
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </a>
           </div>
-          <div class="red-info">
-            <span class="red-nombre">Facebook</span>
-            <span class="red-handle">revistatramasdelsur</span>
+          <div class="envio-deco" aria-hidden="true">
+            <div class="envio-deco-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 20h9"/>
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+              </svg>
+            </div>
+            <p class="envio-deco-text">Cada historia merece ser leída</p>
           </div>
-          <div class="red-arrow" aria-hidden="true">→</div>
-        </a>
+        </div>
+      </div>
+    </section>
 
-        <a
-          href="https://www.instagram.com/revistatramasdelsur?igsh=MWpoNmkwczdpbGJtcQ=="
-          target="_blank"
-          rel="noopener noreferrer"
-          class="red-card"
-          aria-label="Visitar Tramas del Sur en Instagram (abre en nueva pestaña)"
-        >
-          <div class="red-icon" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-              <circle cx="12" cy="12" r="4"/>
-              <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
-            </svg>
-          </div>
-          <div class="red-info">
-            <span class="red-nombre">Instagram</span>
-            <span class="red-handle">@revistatramasdelsur</span>
-          </div>
-          <div class="red-arrow" aria-hidden="true">→</div>
-        </a>
+    <!-- REDES -->
+    <section class="redes" id="redes" aria-labelledby="redes-heading">
+      <div class="inner">
+        <p class="section-label">Seguinos</p>
+        <h2 class="redes-titulo" id="redes-heading">Nuestras Redes</h2>
+        <div class="redes-grid">
+          <a
+            href="https://www.facebook.com/revistatramasdelsur"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="red-card"
+            aria-label="Visitar Tramas del Sur en Facebook (abre en nueva pestaña)"
+          >
+            <div class="red-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+              </svg>
+            </div>
+            <div class="red-info">
+              <span class="red-nombre">Facebook</span>
+              <span class="red-handle">revistatramasdelsur</span>
+            </div>
+            <div class="red-arrow" aria-hidden="true">→</div>
+          </a>
+
+          <a
+            href="https://www.instagram.com/revistatramasdelsur?igsh=MWpoNmkwczdpbGJtcQ=="
+            target="_blank"
+            rel="noopener noreferrer"
+            class="red-card"
+            aria-label="Visitar Tramas del Sur en Instagram (abre en nueva pestaña)"
+          >
+            <div class="red-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+              </svg>
+            </div>
+            <div class="red-info">
+              <span class="red-nombre">Instagram</span>
+              <span class="red-handle">@revistatramasdelsur</span>
+            </div>
+            <div class="red-arrow" aria-hidden="true">→</div>
+          </a>
+        </div>
       </div>
     </section>
 
   </main>
 
   <footer>
-    <div class="footer-logo">
-      <img src="assets/img/logo/logo.jpeg" alt="Tramas del Sur" />
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <img src="assets/img/logo/logo.jpeg" alt="Tramas del Sur" />
+      </div>
+      <span class="footer-copy">Revista independiente de arte y cultura · Primera edición</span>
     </div>
-    <span class="footer-copy">Revista independiente de arte y cultura · Primera edición</span>
   </footer>
 
-  <!-- JavaScript externo -->
   <script src="assets/js/app.js" defer></script>
 
 </body>
