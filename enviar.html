@@ -3,177 +3,290 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Enviar Colaboración — SHC Digital</title>
-  
+  <meta name="description" content="Enviá tu cuento a Tramas del Sur — Revista independiente de arte y cultura." />
+
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' https://fonts.googleapis.com;
+    style-src 'self' https://fonts.googleapis.com;
+    font-src 'self' https://fonts.gstatic.com;
+    img-src 'self' data:;
+    connect-src 'self' https://script.google.com https://script.googleusercontent.com;
+    object-src 'none';
+    base-uri 'self';
+    form-action 'none';
+  " />
+
+  <title>Enviá tu Cuento — Tramas del Sur</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght=0,400;0,700;0,900;1,400;1,700&family=Archivo:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="assets/css/enviar.css" />
 </head>
-<body style="background-color: var(--cream); color: var(--ink); -webkit-font-smoothing: antialiased;">
+<body>
 
-  <nav style="position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 5rem; background: rgba(250, 247, 242, 0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line);">
-    <a href="index.html" class="nav-logo" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none;">
-      <span class="logo-wordmark" style="font-family: var(--font-serif); font-weight: 700; font-size: 1.2rem; color: var(--ink); letter-spacing: 0.02em;">SHC <em style="font-style: italic; color: var(--accent);">Digital</em></span>
+  <nav aria-label="Navegación principal">
+    <a href="index.html" class="nav-logo" aria-label="Tramas del Sur — Inicio">
+      <img src="assets/img/logo/logo.jpeg" alt="Tramas del Sur" />
     </a>
-    <ul class="nav-links" style="display: flex; align-items: center; gap: 2.5rem; list-style: none;">
-      <li><a href="index.html" style="color: var(--stone); text-decoration: none; font-size: 0.82rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;">Inicio</a></li>
-      <li><a href="servicios.html" style="color: var(--stone); text-decoration: none; font-size: 0.82rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;">Servicios</a></li>
-      <li><a href="index.html#contacto" style="color: var(--stone); text-decoration: none; font-size: 0.82rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;">Contacto</a></li>
-    </ul>
+    <a href="index.html" class="btn-volver">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+      Volver al inicio
+    </a>
   </nav>
 
-  <header style="padding: 160px 20px 40px 20px; text-align: center; max-width: 800px; margin: 0 auto;">
-    <span style="font-family: 'Archivo', sans-serif; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); font-weight: 600; display: block; margin-bottom: 12px;">Recepción de Contenido</span>
-    <h1 style="font-family: var(--font-serif); font-size: 42px; font-weight: 700; line-height: 1.15; margin-bottom: 20px; color: var(--ink);">Envío de Material</h1>
-    <p style="font-family: 'Archivo', sans-serif; color: var(--stone); font-size: 15px; line-height: 1.6; font-weight: 400;">
-      Completá los campos requeridos para adjuntar tu archivo y procesar la revisión para la revista.
-    </p>
-  </header>
+  <main>
 
-  <main style="max-width: 700px; margin: 0 auto; padding: 0 20px 100px 20px;">
-    
-    <div style="background-color: var(--paper); border: 1px solid var(--line); padding: 50px;">
-      
-      <form id="enviar-formulario" style="display: flex; flex-direction: column; gap: 24px;">
-        
-        <div>
-          <label for="nombre" style="font-family: 'Archivo', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--stone); display: block; margin-bottom: 8px; font-weight: 600;">Nombre y Apellido *</label>
-          <input type="text" id="nombre" name="nombre" required style="width: 100%; padding: 14px; border: 1px solid var(--line); background: var(--cream); color: var(--ink); font-family: 'Archivo', sans-serif; font-size: 14px; box-sizing: border-box;" />
-        </div>
+    <!-- ENCABEZADO -->
+    <header class="form-header">
+      <span class="form-eyebrow">Convocatoria abierta</span>
+      <h1 class="form-titulo">Enviá tu Cuento</h1>
+      <p class="form-subtitulo">
+        Compartí tu historia con nosotros. Leemos cada envío con atención y cuidado.
+      </p>
+    </header>
 
-        <div>
-          <label for="email" style="font-family: 'Archivo', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--stone); display: block; margin-bottom: 8px; font-weight: 600;">Correo Electrónico *</label>
-          <input type="email" id="email" name="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Por favor, ingresá una dirección de correo electrónico válida (ej: usuario@dominio.com)." style="width: 100%; padding: 14px; border: 1px solid var(--line); background: var(--cream); color: var(--ink); font-family: 'Archivo', sans-serif; font-size: 14px; box-sizing: border-box;" />
-        </div>
+    <!-- HILO DECORATIVO -->
+    <div class="thread-divider" aria-hidden="true">
+      <div class="thread-line"></div>
+      <svg width="100" height="20" viewBox="0 0 100 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 10 C8 4,14 16,20 10 S32 4,40 10 S52 16,60 10 S70 4,80 10 S90 16,98 10"
+          stroke="#d95f1a" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+      </svg>
+      <div class="thread-line"></div>
+    </div>
 
-        <div>
-          <label for="escuela" style="font-family: 'Archivo', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--stone); display: block; margin-bottom: 8px; font-weight: 600;">Escuela / Institución *</label>
-          <input type="text" id="escuela" name="escuela" required style="width: 100%; padding: 14px; border: 1px solid var(--line); background: var(--cream); color: var(--ink); font-family: 'Archivo', sans-serif; font-size: 14px; box-sizing: border-box;" />
-        </div>
+    <!-- FORMULARIO -->
+    <div class="form-card">
+      <form id="envioForm" novalidate>
 
-        <div>
-          <label style="font-family: 'Archivo', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--stone); display: block; margin-bottom: 8px; font-weight: 600;">Autorización de Publicación *</label>
-          <div style="display: flex; align-items: flex-start; gap: 10px; background: var(--cream); padding: 14px; border: 1px solid var(--line);">
-            <input type="checkbox" id="autoriza" name="autoriza" required style="margin-top: 4px;" />
-            <label for="autoriza" style="font-family: 'Archivo', sans-serif; font-size: 13px; color: var(--ink2); line-height: 1.4;">Autorizo la revisión y eventual publicación del material adjunto bajo los términos editoriales establecidos.</label>
+        <!-- SECCIÓN: DATOS PERSONALES -->
+        <fieldset class="form-section" style="border:none; padding:0; margin:0 0 2rem;">
+          <legend class="form-section-title">Datos personales</legend>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nombre">
+                Nombre y Apellido <span class="required-mark" aria-hidden="true">*</span>
+              </label>
+              <input
+                type="text"
+                id="nombre"
+                name="nombre"
+                placeholder="Ej: María González"
+                autocomplete="name"
+                aria-required="true"
+                aria-describedby="error-nombre"
+              />
+              <span class="field-error" id="error-nombre" role="alert"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="edad">
+                Rango de Edad <span class="required-mark" aria-hidden="true">*</span>
+              </label>
+              <select
+                id="edad"
+                name="edad"
+                aria-required="true"
+                aria-describedby="error-edad"
+              >
+                <option value="" disabled selected>Seleccioná tu rango</option>
+                <option value="13 a 17">13 a 17</option>
+                <option value="18 a 22">18 a 22</option>
+                <option value="23 a 27">23 a 27</option>
+                <option value="28 a 32">28 a 32</option>
+                <option value="33 a 37">33 a 37</option>
+                <option value="38 a 42">38 a 42</option>
+                <option value="43 a 47">43 a 47</option>
+                <option value="48 a 52">48 a 52</option>
+                <option value="53 a 57">53 a 57</option>
+                <option value="58 a 62">58 a 62</option>
+                <option value="63 a 67">63 a 67</option>
+                <option value="68 a 72">68 a 72</option>
+                <option value="73 a 77">73 a 77</option>
+                <option value="78 a 82">78 a 82</option>
+                <option value="83 a 87">83 a 87</option>
+                <option value="88 a 92">88 a 92</option>
+                <option value="93 a 97">93 a 97</option>
+                <option value="98 a 102">98 a 102</option>
+                <option value="+100">+100</option>
+              </select>
+              <span class="field-error" id="error-edad" role="alert"></span>
+            </div>
           </div>
-        </div>
 
-        <div>
-          <label for="titulo" style="font-family: 'Archivo', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--stone); display: block; margin-bottom: 8px; font-weight: 600;">Título del Trabajo *</label>
-          <input type="text" id="titulo" name="titulo" required style="width: 100%; padding: 14px; border: 1px solid var(--line); background: var(--cream); color: var(--ink); font-family: 'Archivo', sans-serif; font-size: 14px; box-sizing: border-box;" />
-        </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">
+                Correo Electrónico <span class="required-mark" aria-hidden="true">*</span>
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="tu@correo.com"
+                autocomplete="email"
+                aria-required="true"
+                aria-describedby="error-email"
+              />
+              <span class="field-error" id="error-email" role="alert"></span>
+            </div>
 
-        <div>
-          <label for="genero" style="font-family: 'Archivo', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--stone); display: block; margin-bottom: 8px; font-weight: 600;">Género Literario / Categoría *</label>
-          <input type="text" id="genero" name="genero" required placeholder="Ej: Poesía, Ensayo, Crónica, Cuento" style="width: 100%; padding: 14px; border: 1px solid var(--line); background: var(--cream); color: var(--ink); font-family: 'Archivo', sans-serif; font-size: 14px; box-sizing: border-box;" />
-        </div>
-
-        <div>
-          <label for="resena" style="font-family: 'Archivo', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--stone); display: block; margin-bottom: 8px; font-weight: 600;">Descripción o Reseña *</label>
-          <textarea id="resena" name="resena" required style="width: 100%; height: 120px; padding: 14px; border: 1px solid var(--line); background: var(--cream); color: var(--ink); font-family: 'Archivo', sans-serif; font-size: 14px; box-sizing: border-box; resize: vertical; line-height: 1.5;"></textarea>
-        </div>
-
-        <div>
-          <label for="archivo" style="font-family: 'Archivo', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--stone); display: block; margin-bottom: 8px; font-weight: 600;">Adjuntar Documento (.pdf, .doc, .docx, .txt) *</label>
-          <div style="background: var(--cream); border: 1px dashed var(--line); padding: 20px; text-align: center;">
-            <input type="file" id="archivo" name="archivo" accept=".pdf,.doc,.docx,.txt" required style="font-family: 'Archivo', sans-serif; font-size: 13px; color: var(--ink2);" />
+            <div class="form-group">
+              <label for="genero">
+                Género <span class="required-mark" aria-hidden="true">*</span>
+              </label>
+              <select
+                id="genero"
+                name="genero"
+                aria-required="true"
+                aria-describedby="error-genero"
+              >
+                <option value="" disabled selected>Seleccioná una opción</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Prefiero no contestar">Prefiero no contestar</option>
+              </select>
+              <span class="field-error" id="error-genero" role="alert"></span>
+            </div>
           </div>
-        </div>
 
-        <div style="margin-top: 10px;">
-          <button type="submit" id="btn-submit" style="width: 100%; background-color: var(--accent); color: var(--white); font-family: 'Archivo', sans-serif; font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 1.5px; padding: 18px; border: none; cursor: pointer; transition: background-color 0.3s ease;">Enviar Colaboración →</button>
+          <div class="form-group">
+            <label for="escuela">
+              Escuela o Institución <span class="required-mark" aria-hidden="true">*</span>
+            </label>
+            <input
+              type="text"
+              id="escuela"
+              name="escuela"
+              placeholder="Ej: Escuela Secundaria N° 12 / Universidad de Buenos Aires"
+              autocomplete="organization"
+              aria-required="true"
+              aria-describedby="error-escuela"
+            />
+            <span class="field-error" id="error-escuela" role="alert"></span>
+          </div>
+        </fieldset>
+
+        <!-- SECCIÓN: SOBRE EL CUENTO -->
+        <fieldset class="form-section" style="border:none; padding:0; margin:0 0 2rem;">
+          <legend class="form-section-title">Sobre el cuento</legend>
+
+          <div class="form-group">
+            <label for="titulo">
+              Título <span class="required-mark" aria-hidden="true">*</span>
+            </label>
+            <input
+              type="text"
+              id="titulo"
+              name="titulo"
+              placeholder="El título de tu cuento"
+              aria-required="true"
+              aria-describedby="error-titulo"
+            />
+            <span class="field-error" id="error-titulo" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="descripcion">
+              Descripción o Reseña <span class="required-mark" aria-hidden="true">*</span>
+            </label>
+            <textarea
+              id="descripcion"
+              name="descripcion"
+              rows="4"
+              placeholder="Una breve descripción de tu cuento: de qué trata, qué lo inspiró, lo que quieras contarnos..."
+              aria-required="true"
+              aria-describedby="error-descripcion"
+            ></textarea>
+            <span class="field-error" id="error-descripcion" role="alert"></span>
+          </div>
+
+          <!-- ZONA DE CARGA DE ARCHIVO -->
+          <div class="form-group">
+            <label id="archivo-label">
+              Archivo del Cuento <span class="required-mark" aria-hidden="true">*</span>
+            </label>
+            <div
+              class="file-drop-zone"
+              id="dropZone"
+              role="button"
+              tabindex="0"
+              aria-labelledby="archivo-label"
+              aria-describedby="error-archivoInput archivo-hint"
+            >
+              <input
+                type="file"
+                id="archivoInput"
+                name="archivoInput"
+                accept=".pdf,.doc,.docx,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
+                aria-hidden="true"
+                tabindex="-1"
+              />
+              <div class="file-drop-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+              </div>
+              <p class="file-drop-text">
+                <strong>Hacé clic o arrastrá tu archivo aquí</strong><br />
+                <span id="archivo-hint" class="file-drop-hint">PDF, DOC, DOCX o TXT · Máximo 10 MB</span>
+              </p>
+              <p class="file-name-display" id="fileNameDisplay" aria-live="polite"></p>
+            </div>
+            <span class="field-error" id="error-archivoInput" role="alert"></span>
+          </div>
+        </fieldset>
+
+        <!-- AUTORIZACIÓN -->
+        <div class="check-group">
+          <input
+            type="checkbox"
+            id="autoriza"
+            name="autoriza"
+            aria-required="true"
+            aria-describedby="error-autoriza"
+          />
+          <label for="autoriza" class="check-label">
+            Autorizo a <strong>Tramas del Sur</strong> a recibir, almacenar y, en caso de ser seleccionado, publicar mi cuento en la revista, mencionando mi nombre como autor/a. Entiendo que mis datos personales serán utilizados únicamente a los fines de esta convocatoria.
+            <span class="required-mark" aria-hidden="true"> *</span>
+          </label>
         </div>
+        <span class="field-error" id="error-autoriza" role="alert"></span>
+
+        <!-- BOTÓN ENVIAR -->
+        <button type="submit" id="btnEnviar" class="btn-enviar">
+          <span class="btn-text">Enviar mi Cuento</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+          <span class="spinner" aria-hidden="true"></span>
+        </button>
+
+        <!-- ALERTA DE RESULTADO -->
+        <div class="form-alert" id="formAlert" role="status" aria-live="polite"></div>
 
       </form>
-      
     </div>
 
   </main>
 
-  <footer class="footer" style="background-color: var(--paper); border-top: 1px solid var(--line); padding: 60px 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
-    <div class="footer-left">
-      <div class="footer-logo" style="font-family: var(--font-serif); font-size: 18px; font-weight: 700; color: var(--ink); margin-bottom: 8px;">SHC Digital</div>
-      <div class="footer-copy" style="font-family: 'Archivo', sans-serif; font-size: 12px; color: var(--stone);">© 2026 SHC Digital. Todos los derechos reservados.</div>
+  <footer>
+    <div class="footer-logo">
+      <img src="assets/img/logo/logo.jpeg" alt="Tramas del Sur" />
     </div>
-    <ul class="footer-nav" style="display: flex; list-style: none; gap: 24px; font-family: 'Archivo', sans-serif; font-size: 12px;">
-      <li><a href="terminos.html" style="color: var(--stone); text-decoration: none;">Privacidad</a></li>
-      <li><a href="terminos.html" style="color: var(--stone); text-decoration: none;">Términos</a></li>
-      <li><a href="index.html#contacto" style="color: var(--stone); text-decoration: none;">Contacto</a></li>
-    </ul>
+    <span class="footer-copy">Revista independiente de arte y cultura · Primera edición</span>
   </footer>
 
-  <script>
-    document.getElementById('enviar-formulario').addEventListener('submit', async function(e) {
-      e.preventDefault();
+  <script src="assets/js/enviar.js" defer></script>
 
-      const btn = document.getElementById('btn-submit');
-      const originalText = btn.innerText;
-      btn.innerText = 'PROCESANDO Y SUBIENDO ARCHIVO...';
-      btn.disabled = true;
-
-      const nombre = document.getElementById('nombre').value;
-      const email = document.getElementById('email').value;
-      const escuela = document.getElementById('escuela').value;
-      const autoriza = document.getElementById('autoriza').checked ? "Sí" : "No";
-      const titulo = document.getElementById('titulo').value;
-      const genero = document.getElementById('genero').value;
-      const resena = document.getElementById('resena').value;
-      const fileInput = document.getElementById('archivo');
-
-      if (fileInput.files.length === 0) {
-        alert('Por favor, seleccione un archivo.');
-        btn.innerText = originalText;
-        btn.disabled = false;
-        return;
-      }
-
-      const file = fileInput.files[0];
-      const nombreArchivo = file.name;
-
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = async function() {
-        const archivoBase64 = reader.result.split(',')[1];
-
-        const payload = {
-          nombre: nombre,
-          email: email,
-          escuela: escuela,
-          autoriza: autoriza,
-          titulo: titulo,
-          genero: genero,
-          resena: resena,
-          archivo: archivoBase64,
-          nombreArchivo: nombreArchivo
-        };
-
-        // Dentro de reader.onloadend, donde se hace el fetch...
-        try {
-          const response = await fetch('https://script.google.com/macros/s/AKfycbyWGScMcjUkRi9UMspM-MkG_EMjii8gX29DqHWEQ0i3JR096N07lf1-ILFEBezWJVJteA/exec', {
-            method: 'POST',
-            mode: 'no-cors', 
-            headers: {
-              // Eliminamos 'application/json' para evitar que el navegador envíe un pre-flight OPTIONS que Google Apps Script no soporta
-              'Content-Type': 'text/plain;charset=utf-8' 
-            },
-            body: JSON.stringify(payload)
-          });
-
-          alert('¡Colaboración enviada con éxito! El archivo ha sido procesado y los correos de confirmación están en camino.');
-          document.getElementById('enviar-formulario').reset();
-
-        } catch (error) {
-          console.error('Error en el envío:', error);
-          alert('Ocurrió un error en la conexión. Por favor intentá nuevamente.');
-        } finally {
-          btn.innerText = originalText;
-          btn.disabled = false;
-        }
-      };
-    });
-  </script>
 </body>
 </html>
