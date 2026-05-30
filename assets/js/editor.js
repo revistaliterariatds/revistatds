@@ -7,15 +7,33 @@
 'use strict';
 
 /* ─────────────────────────────────────────
-   Módulo: Autenticación
+   Módulo: Autenticación con hash SHA-256
+   La contraseña nunca se almacena en texto
+   plano — solo su huella SHA-256.
+   Para cambiarla: generá el nuevo hash en
+   https://emn178.github.io/online-tools/sha256.html
+   y reemplazá el valor de HASH_CLAVE.
    ───────────────────────────────────────── */
-function verificarClave() {
+const HASH_CLAVE = '687439509c9cf23dca8d575ae91da7dfa1c8f29131bbed247b48289b061ca95c';
+
+async function hashear(texto) {
+  const encoder = new TextEncoder();
+  const data     = encoder.encode(texto);
+  const buffer   = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(buffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+async function verificarClave() {
   const clave    = document.getElementById('passwordField').value;
   const errorDiv = document.getElementById('error-msg');
 
   errorDiv.style.display = 'none';
 
-  if (clave === "notasentrama$") {
+  const hashIngresado = await hashear(clave);
+
+  if (hashIngresado === HASH_CLAVE) {
     sessionStorage.setItem('auth_tramas', 'true');
     mostrarGenerador();
   } else {
@@ -24,7 +42,7 @@ function verificarClave() {
 }
 
 function mostrarGenerador() {
-  document.getElementById('loginBox').style.display    = 'none';
+  document.getElementById('loginBox').style.display     = 'none';
   document.getElementById('mainContainer').style.display = 'block';
 }
 
