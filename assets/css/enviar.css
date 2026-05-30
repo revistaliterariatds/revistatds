@@ -656,6 +656,17 @@ footer {
   margin-top: 0;
 }
 
+.check-label .link-bases {
+  color: var(--orange);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s;
+}
+
+.check-label .link-bases:hover {
+  color: var(--orange-light);
+}
+
 /* ─── RESPONSIVE ─── */
 @media (max-width: 640px) {
   nav { padding: 0 1.2rem; }
